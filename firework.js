@@ -10,7 +10,7 @@ function Firework(startX, startY, targetX, targetY) {
 			y: startY
 		},
 		previous: [],
-		previousCount: 3, // increase for longer trail
+		previousCount: Math.floor(random(3, 8)), // increase for longer trail
 		target: {
 			x: targetX,
 			y: targetY
@@ -21,8 +21,8 @@ function Firework(startX, startY, targetX, targetY) {
 		toTarget: calcDistance(startX, startY, targetX, targetY)
 	}
 	this.angle = Math.atan2(targetY - startY, targetX - startX);
-	this.velocity = 2;
-	this.acceleration = 0.1;
+	this.velocity = 5;
+	this.acceleration = 0.00;
 
 	// fill previous coords array with starting coords
 	while (this.coords.previousCount--){
@@ -60,6 +60,6 @@ Firework.prototype.draw = function() {
 	ctx.beginPath();
 	ctx.moveTo(this.coords.previous[this.coords.previous.length - 1][0], this.coords.previous[this.coords.previous.length - 1][1]);
 	ctx.lineTo(this.coords.current.x, this.coords.current.y);
-	ctx.strokeStyle = 'hsl(' + "60" + ', 100%, ' + "5" + '%)';
+	ctx.strokeStyle = 'hsl(' + "60" + ', 100%, ' + "3" + '%)';
 	ctx.stroke();
 }

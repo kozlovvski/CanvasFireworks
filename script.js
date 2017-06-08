@@ -17,7 +17,7 @@ var particleList = [],
 	fireworkList = [];
 
 // setup timer for loop
-var timer = {count: 0, total: 40};
+var timer = {count: 0, total: 15};
 
 // setup needed functions
 function random(from, to) {
@@ -58,7 +58,11 @@ function loop() {
 	}
 	// make random fireworks
 	if(timer.count >= timer.total) {
-		fireworkList.push(new Firework(canvas.width / 2 + random(-canvas.width / 16, canvas.width / 16), canvas.height, canvas.target.x + random(-canvas.width / 8, canvas.width / 8), canvas.target.y + random(-canvas.height / 8, canvas.height / 4)));
+		var startX = canvas.width / 2 + random(-canvas.width / 4, canvas.width / 4),
+			startY = canvas.height,
+			finishX = startX + random(-canvas.width / 16, canvas.width / 16),
+			finishY = canvas.target.y + random(-canvas.height / 8, canvas.height / 4);
+		fireworkList.push(new Firework(startX, startY, finishX, finishY));
 		timer.count = 0;
 	} else {
 		timer.count++;

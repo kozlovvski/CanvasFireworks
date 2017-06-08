@@ -16,7 +16,7 @@ function Particle(startX, startY, givenHue) {
 
 	// set random angle and velocity
 	this.angle = random(0, Math.PI * 2);
-	this.velocity = random(1, 10);
+	this.velocity = random(0, 10);
 
 	// set slightly different hue for all particles in the same firework
 	this.hue = givenHue + random(-20, 20);
