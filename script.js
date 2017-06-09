@@ -12,28 +12,34 @@ function setupCanvas() {
 // change size on resize
 window.addEventListener('resize', setupCanvas);
 
-// setup arrays for fireworks and its' particles
-var particleList = [],
-	fireworkList = [];
+// necessary variables
+	// setup arrays for fireworks and its' particles
+	var particleList = [],
+		fireworkList = [];
+	// setup timer for loop
+	var timer = {count: 0, total: 15};
+	// gravitational acceleration
+	var gravity = 0.1;
 
-// setup timer for loop
-var timer = {count: 0, total: 15};
-
-// setup needed functions
-function random(from, to) {
-	return Math.random() * (to - from) + from;
-}
-function calcDistance(firstX, firstY, secondX, secondY) {
-	//calculate from Pythagorean Theorem
-	return Math.sqrt(Math.pow(secondX - firstX, 2) + Math.pow(secondY - firstY, 2));
-}
-function createParticles(startX, startY) {
-	const particleCount = 150,
-		givenHue = random(0, 360);
-	for (var i = 0; i < particleCount; i++) {
-		particleList.push(new Particle(startX, startY, givenHue));
+// necessary functions
+	// calculate random value from range
+	function random(from, to) {
+		return Math.random() * (to - from) + from;
 	}
-}
+	// v0.1 - straight line trajectory
+	// function calcDistance(firstX, firstY, secondX, secondY) {
+	// 	//calculate from Pythagorean Theorem
+	// 	return Math.sqrt(Math.pow(secondX - firstX, 2) + Math.pow(secondY - firstY, 2));
+	// }
+
+	// create the explosion
+	function createParticles(startX, startY) {
+		const particleCount = 150,
+			givenHue = random(0, 360);
+		for (var i = 0; i < particleCount; i++) {
+			particleList.push(new Particle(startX, startY, givenHue));
+		}
+	}
 function loop() {
 	window.requestAnimationFrame(loop);
 
@@ -51,16 +57,16 @@ function loop() {
 		fireworkList[i].draw();
 		fireworkList[i].update(i);
 	}
-	var i = particleList.length;
+	i = particleList.length;
 	while(i--) {
 		particleList[i].draw();
 		particleList[i].update(i);
 	}
 	// make random fireworks
 	if(timer.count >= timer.total) {
-		var startX = canvas.width / 2 + random(-canvas.width / 4, canvas.width / 4),
+		var startX = canvas.width / 2,
 			startY = canvas.height,
-			finishX = startX + random(-canvas.width / 16, canvas.width / 16),
+			finishX = startX + random(-canvas.width / 4, canvas.width / 4),
 			finishY = canvas.target.y + random(-canvas.height / 8, canvas.height / 4);
 		fireworkList.push(new Firework(startX, startY, finishX, finishY));
 		timer.count = 0;
