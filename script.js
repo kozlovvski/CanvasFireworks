@@ -1,4 +1,4 @@
-var canvas = document.querySelector('#canvas'),
+const canvas = document.querySelector('#canvas'),
 	ctx = canvas.getContext('2d');
 
 function setupCanvas() {
@@ -17,9 +17,9 @@ window.addEventListener('resize', setupCanvas);
 	var particleList = [],
 		fireworkList = [];
 	// setup timer for loop
-	var timer = {count: 0, total: 15};
+	var timer = {count: 0, total: 40};
 	// gravitational acceleration
-	var gravity = 0.1;
+	const gravity = 0.1;
 
 // necessary functions
 	// calculate random value from range
@@ -35,7 +35,7 @@ window.addEventListener('resize', setupCanvas);
 	// create the explosion
 	function createParticles(startX, startY) {
 		const particleCount = 150,
-			givenHue = random(0, 360);
+		      givenHue = random(0, 360);
 		for (var i = 0; i < particleCount; i++) {
 			particleList.push(new Particle(startX, startY, givenHue));
 		}
@@ -48,7 +48,7 @@ function loop() {
 	ctx.fillStyle = "rgba(0, 0, 0, 0.3)";
 	ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-	// make particles overlap eachother
+	// make particles overlap each other
 	ctx.globalCompositeOperation = "lighter";
 
 	// draw and update everything
@@ -69,7 +69,7 @@ function loop() {
 			finishX = startX + random(-canvas.width / 4, canvas.width / 4),
 			finishY = canvas.target.y + random(-canvas.height / 8, canvas.height / 4);
 		fireworkList.push(new Firework(startX, startY, finishX, finishY));
-		timer.count = 0;
+		timer.count = Math.floor(random(0, 30));
 	} else {
 		timer.count++;
 	}
