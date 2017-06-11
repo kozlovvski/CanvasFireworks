@@ -19,8 +19,8 @@ function Particle(startX, startY, givenHue) {
 	this.velocity = random(0, 10);
 
 	// set slightly different hue for all particles in the same firework
-	this.hue = givenHue + random(-20, 20);
-	this.brightness = random(50, 70);
+	this.hue = givenHue + random(-10, 10);
+	this.brightness = random(55, 65);
 	this.alpha = 1;
 
 	// set how fast particle disappears
@@ -29,17 +29,17 @@ function Particle(startX, startY, givenHue) {
 
 Particle.prototype.update = function(index) {
 	// remove last coords and push new ones
-	this.coords.previous.pop();
-	this.coords.previous.unshift( [ this.coords.current.x, this.coords.current.y ] );
+	this.coords.previous.shift();
+	this.coords.previous.push([this.coords.current.x, this.coords.current.y]);
 
 	// slow down the particle
 	this.velocity *= 0.95;
 
-	// canvas.heightange coords
+	// change coords
 	this.coords.current.x += Math.cos(this.angle) * this.velocity;
-	this.coords.current.y += Math.sin(this.angle) * this.velocity + 0.8;
+	this.coords.current.y += Math.sin(this.angle) * this.velocity + gravity * 10;
 
-	// canvas.heightange opacity
+	// change opacity
 	this.alpha -= this.fade;
 
 	// remove the particle when is it invisible - prevent fps drop
@@ -48,13 +48,12 @@ Particle.prototype.update = function(index) {
 	}
 };
 
-Particle.prototype.draw = function() { // move to previous position and draw line to current one
-	const lastX = this.coords.previous[2].x,
-		lastY = this.coords.previous[2].y;
-	ctx.beginPath();
-	ctx.lineWidth = 2;
-	ctx.moveTo( this.coords.previous[ this.coords.previous.length - 1 ][ 0 ], this.coords.previous[ this.coords.previous.length - 1 ][ 1 ] )
-	ctx.lineTo(this.coords.current.x, this.coords.current.y);
-	ctx.strokeStyle = 'hsla(' + this.hue + ', 100%, ' + this.brightness + '%, ' + this.alpha + ')';
-	ctx.stroke();
+Particle.prototype.draw = function() { 
+	// move to previous position and draw line to current one
+	ctxFireworks.beginPath();
+	ctxFireworks.lineWidth = random(1, 3);
+	ctxFireworks.moveTo(this.coords.previous[0][0], this.coords.previous[0][1])
+	ctxFireworks.lineTo(this.coords.current.x, this.coords.current.y);
+	ctxFireworks.strokeStyle = 'hsla(' + this.hue + ', 100%, ' + this.brightness + '%, ' + this.alpha + ')';
+	ctxFireworks.stroke();
 };
