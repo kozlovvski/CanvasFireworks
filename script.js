@@ -1,11 +1,6 @@
-<<<<<<< HEAD
 var canvasFireworks = document.querySelector('#canvas-fireworks'),
 	canvasStars = document.querySelector('#canvas-stars');
 	ctxFireworks = canvasFireworks.getContext('2d');
-=======
-var canvas = document.querySelector('#canvas'),
-	ctx = canvas.getContext('2d');
->>>>>>> origin/master
 
 function setupCanvas() {
 	canvasFireworks.width = window.innerWidth;
