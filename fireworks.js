@@ -1,20 +1,19 @@
 (function() {
 
 // canvas setup
-var canvasFireworks = document.querySelector('#canvas-fireworks'),
-	canvasStars = document.querySelector('#canvas-stars');
-	ctxFireworks = canvasFireworks.getContext('2d'),
-	ctxStars = canvasStars.getContext('2d');
+var canvas = document.querySelector('#canvas-fireworks'),
+	ctx = canvas.getContext('2d');
 
 function setupCanvas() {
-	canvasFireworks.width = window.innerWidth;
-	canvasFireworks.height = window.innerHeight;
-	canvasStars.width = window.innerWidth;
-	canvasStars.height = window.innerHeight;
+	canvas.width = window.innerWidth;
+	canvas.height = window.innerHeight;
 } setupCanvas();
 
 // change size on resize
-window.addEventListener('resize', setupCanvas);
+window.addEventListener('resize', () => {
+	setupCanvas();
+	starList = [];
+});
 
 // requestAnimationFrame polyfill by Erik Möller. fixes from Paul Irish and Tino Zijdel
 // https://gist.github.com/paulirish/1579671
@@ -115,7 +114,10 @@ function Firework(startX, startY, targetX, targetY) {
 		traveling: 0,
 		max: this.launchVelocity.y / gravity
 	};
-
+	this.ring = {
+		hue: 0,
+		angle: 0
+	}
 	// fill previous coords array with starting coords
 	while(this.coords.previousCount--) {
 		this.coords.previous.push([this.coords.start.x, this.coords.start.y]);
@@ -141,19 +143,30 @@ Firework.prototype.update = function(index) {
 		// because, unlike in physics, the x axis is at the top - not at the bottom
 		this.coords.current.y = this.coords.start.y - this.launchVelocity.y * this.time.traveling + gravity * Math.pow(this.time.traveling, 2) / 2;
 		this.coords.current.x += this.launchVelocity.x;
+
+		this.ring.hue += 2;
+		this.ring.angle += 0.04;
 	};
 }
 
 Firework.prototype.draw = function() { 
 	// move to the previous position and draw line to the current one
-	ctxFireworks.beginPath();
-	ctxFireworks.moveTo(this.coords.previous[0][0], this.coords.previous[0][1]);
-	ctxFireworks.lineTo(this.coords.current.x, this.coords.current.y);
-	ctxFireworks.strokeStyle = 'hsl(40, 100%, 70%)';
+	ctx.beginPath();
+	ctx.moveTo(this.coords.previous[0][0], this.coords.previous[0][1]);
+	ctx.lineTo(this.coords.current.x, this.coords.current.y);
+	ctx.strokeStyle = 'hsl(40, 100%, 70%)';
 
 	// fireworks with longer trail should have also thicker trail
-	ctxFireworks.lineWidth = this.coords.previous.length / 5;
-	ctxFireworks.stroke();
+	ctx.lineWidth = this.coords.previous.length / 5;
+	ctx.stroke();
+
+	// make ring around target
+	if (this.time.max - this.time.traveling > 10) {
+		ctx.beginPath();
+		ctx.arc(this.coords.target.x, this.coords.target.y, 8, this.ring.angle, this.ring.angle + Math.PI * 4 / 3);
+		ctx.strokeStyle = `hsl(${this.ring.hue}, 100%, 10%)`;
+		ctx.stroke();	
+	}
 }
 
 // create the particle 
@@ -208,12 +221,50 @@ Particle.prototype.update = function(index) {
 
 Particle.prototype.draw = function() { 
 	// move to the previous position and draw line to the current one
-	ctxFireworks.beginPath();
-	ctxFireworks.lineWidth = random(1, 3);
-	ctxFireworks.moveTo(this.coords.previous[0][0], this.coords.previous[0][1])
-	ctxFireworks.lineTo(this.coords.current.x, this.coords.current.y);
-	ctxFireworks.strokeStyle = 'hsla(' + this.hue + ', 100%, ' + this.brightness + '%, ' + this.alpha + ')';
-	ctxFireworks.stroke();
+	ctx.beginPath();
+	ctx.lineWidth = random(1, 3);
+	ctx.moveTo(this.coords.previous[0][0], this.coords.previous[0][1])
+	ctx.lineTo(this.coords.current.x, this.coords.current.y);
+	ctx.strokeStyle = 'hsla(' + this.hue + ', 100%, ' + this.brightness + '%, ' + this.alpha + ')';
+	ctx.stroke();
+};
+
+
+// *** STARS ***
+
+// necessary variables
+	// array for stars
+	var starList = [];
+	// number of stars at screen
+	var starCount = 200;
+
+function Star(maxX, maxY) {
+	this.coords = {
+		x: random(0, maxX),
+		y: random(0, maxY)
+	}
+	this.size = random(0, 3)
+	this.life = {
+		current: 0,
+		target: random(100, 300)
+	}
+	this.alpha = 0
+}
+
+Star.prototype.update = function(index) {
+	this.alpha = -4 / this.life.target / this.life.target * this.life.current * (this.life.current - this.life.target);
+	if(this.alpha < 0) {
+		starList.splice(index, 1);
+	} else {
+		this.life.current++;
+	}
+};
+
+Star.prototype.draw = function() {
+	ctx.beginPath();
+	ctx.arc(this.coords.x, this.coords.y, this.size, 0, 2 * Math.PI);
+	ctx.fillStyle = `hsla(60, 100%, 100%, ${this.alpha * 0.05}`;
+	ctx.fill();
 };
 
 // app loop
@@ -221,12 +272,12 @@ function loop() {
 	window.requestAnimationFrame(loop);
 
 	// clearing canvas at desired opacity
-	ctxFireworks.globalCompositeOperation = 'destination-out';
-	ctxFireworks.fillStyle = "rgba(0, 0, 0, 0.3)";
-	ctxFireworks.fillRect(0, 0, canvasFireworks.width, canvasFireworks.height);
+	ctx.globalCompositeOperation = 'destination-out';
+	ctx.fillStyle = "rgba(0, 0, 0, 0.3)";
+	ctx.fillRect(0, 0, canvas.width, canvas.height);
 
 	// make particles overlap each other
-	ctxFireworks.globalCompositeOperation = "lighter";
+	ctx.globalCompositeOperation = "lighter";
 
 	// draw and update everything
 	var i = fireworkList.length;
@@ -240,15 +291,24 @@ function loop() {
 		particleList[i].update(i);
 	}
 
+	i = starList.length;
+	while(i--) {
+		starList[i].draw();
+		starList[i].update(i);
+	}
+	while(starList.length < starCount) {
+		starList.push(new Star(canvas.width, canvas.height));
+	}
+
 	// make random fireworks
 	if(timer.count >= timer.total) {
 		// set launch place
-		var startX = canvasFireworks.width / 2,
-			startY = canvasFireworks.height;
+		var startX = canvas.width / 2,
+			startY = canvas.height;
 
 		// set boundaries for explosion place
-		var	finishX = startX + random(-canvasFireworks.width / 4, canvasFireworks.width / 4),
-			finishY = random(canvasFireworks.height / 8, canvasFireworks.height / 3);
+		var	finishX = startX + random(-canvas.width / 4, canvas.width / 4),
+			finishY = random(canvas.height / 8, canvas.height / 3);
 
 		fireworkList.push(new Firework(startX, startY, finishX, finishY));
 		timer.count = Math.floor(random(0, timer.total * 3 / 4)); // random time until next launch
@@ -256,9 +316,10 @@ function loop() {
 		timer.count++;
 	}
 
+	// limit mouse-made fireworks number
 	if (limiter.count >= limiter.total) {
 		if (mouse.isPressed) {
-			fireworkList.push(new Firework(canvasFireworks.width / 2, canvasFireworks.height, mouse.x, mouse.y));
+			fireworkList.push(new Firework(canvas.width / 2, canvas.height, mouse.x, mouse.y));
 			limiter.count = 0;
 		}
 	} else {
@@ -267,12 +328,12 @@ function loop() {
 }
 
 // mouse click events
-canvasFireworks.addEventListener('mousemove', function(e) {
-	mouse.x = e.pageX - canvasFireworks.offsetLeft;
-	mouse.y = e.pageY - canvasFireworks.offsetTop;
+canvas.addEventListener('mousemove', function(e) {
+	mouse.x = e.pageX - canvas.offsetLeft;
+	mouse.y = e.pageY - canvas.offsetTop;
 });
-canvasFireworks.addEventListener('mousedown', () => mouse.isPressed = true);
-canvasFireworks.addEventListener( 'mouseup', () => mouse.isPressed = false);
+canvas.addEventListener('mousedown', () => mouse.isPressed = true);
+canvas.addEventListener( 'mouseup', () => mouse.isPressed = false);
 
 window.onload = loop;
 }());
