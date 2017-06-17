@@ -49,7 +49,7 @@ window.addEventListener('resize', () => {
 	var particleList = [],
 		fireworkList = [];
 	// timer for loop
-	var timer = {count: 40, total: 40};
+	var timer = {count: 70, total: 70};
 	// limiter for mouse-clicked fireworks
 	var limiter = {count: 0, total: 10};
 	// gravitational acceleration
@@ -161,12 +161,12 @@ Firework.prototype.draw = function() {
 	ctx.stroke();
 
 	// make ring around target
-	if (this.time.max - this.time.traveling > 10) {
-		ctx.beginPath();
-		ctx.arc(this.coords.target.x, this.coords.target.y, 8, this.ring.angle, this.ring.angle + Math.PI * 4 / 3);
-		ctx.strokeStyle = `hsl(${this.ring.hue}, 100%, 10%)`;
-		ctx.stroke();	
-	}
+	ctx.beginPath();
+	ctx.arc(this.coords.target.x, this.coords.target.y, 8, this.ring.angle, this.ring.angle + Math.PI * 4 / 3);
+	let opacity = this.time.max - this.time.traveling > 20 ? 10 : (this.time.max - this.time.traveling) * 0.5;
+	ctx.strokeStyle = `hsl(${this.ring.hue}, 100%, ${opacity}%)`;
+	ctx.stroke();	
+
 }
 
 // create the particle 
@@ -236,7 +236,7 @@ Particle.prototype.draw = function() {
 	// array for stars
 	var starList = [];
 	// number of stars at screen
-	var starCount = 200;
+	var starCount = 100;
 
 function Star(maxX, maxY) {
 	this.coords = {
@@ -311,7 +311,7 @@ function loop() {
 			finishY = random(canvas.height / 8, canvas.height / 3);
 
 		fireworkList.push(new Firework(startX, startY, finishX, finishY));
-		timer.count = Math.floor(random(0, timer.total * 3 / 4)); // random time until next launch
+		timer.count = Math.floor(random(0, timer.total * 0.5)); // random time until next launch
 	} else {
 		timer.count++;
 	}
@@ -333,7 +333,7 @@ canvas.addEventListener('mousemove', function(e) {
 	mouse.y = e.pageY - canvas.offsetTop;
 });
 canvas.addEventListener('mousedown', () => mouse.isPressed = true);
-canvas.addEventListener( 'mouseup', () => mouse.isPressed = false);
+canvas.addEventListener('mouseup', () => mouse.isPressed = false);
 
 window.onload = loop;
 }());
