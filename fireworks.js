@@ -240,13 +240,13 @@ Particle.prototype.draw = function() {
 
 function Star(maxX, maxY) {
 	this.coords = {
-		x: random(0, maxX),
-		y: random(0, maxY)
+		x: Math.floor(random(0, maxX)),
+		y: Math.floor(random(0, maxY))
 	}
-	this.size = random(0, 3)
+	this.size = Math.ceil(random(0, 2));
 	this.life = {
 		current: 0,
-		target: random(100, 300)
+		target: Math.floor(random(100, 300))
 	}
 	this.alpha = 0
 }
@@ -263,7 +263,7 @@ Star.prototype.update = function(index) {
 Star.prototype.draw = function() {
 	ctx.beginPath();
 	ctx.arc(this.coords.x, this.coords.y, this.size, 0, 2 * Math.PI);
-	ctx.fillStyle = `hsla(60, 100%, 100%, ${this.alpha * 0.05}`;
+	ctx.fillStyle = `hsla(60, 100%, ${random(30,100)}%, ${this.alpha * 0.08}`;
 	ctx.fill();
 };
 
