@@ -15,33 +15,6 @@ window.addEventListener('resize', () => {
 	starList = [];
 });
 
-// requestAnimationFrame polyfill by Erik Möller. fixes from Paul Irish and Tino Zijdel
-// https://gist.github.com/paulirish/1579671
-(function() {
-    var lastTime = 0;
-    var vendors = ['ms', 'moz', 'webkit', 'o'];
-    for(var x = 0; x < vendors.length && !window.requestAnimationFrame; ++x) {
-        window.requestAnimationFrame = window[vendors[x]+'RequestAnimationFrame'];
-        window.cancelAnimationFrame = window[vendors[x]+'CancelAnimationFrame'] 
-                                   || window[vendors[x]+'CancelRequestAnimationFrame'];
-    }
- 
-    if (!window.requestAnimationFrame)
-        window.requestAnimationFrame = function(callback, element) {
-            var currTime = new Date().getTime();
-            var timeToCall = Math.max(0, 16 - (currTime - lastTime));
-            var id = window.setTimeout(function() { callback(currTime + timeToCall); }, 
-              timeToCall);
-            lastTime = currTime + timeToCall;
-            return id;
-        };
- 
-    if (!window.cancelAnimationFrame)
-        window.cancelAnimationFrame = function(id) {
-            clearTimeout(id);
-        };
-}());
-
 // *** FIREWORKS ***
 
 // necessary variables
@@ -106,9 +79,10 @@ function Firework(startX, startY, targetX, targetY) {
 		// s = u0t => u0 = s / t (we know both distance to travel and time in which this must be done)
 		// we will use these formulas to calculate initial velocity
 	this.launchVelocity = {
+		// v0 = sqrt(2ah)
 		y: Math.sqrt(2 * gravity * Math.abs(targetY - startY)),
 		// time: t = v0 / a, so: u0 = s / (v0 / a)
-		x: (targetX - startX) / (Math.sqrt(2 * gravity * Math.abs(targetY - startY)) / gravity)
+		x: (targetX - startX) * gravity / Math.sqrt(2 * gravity * Math.abs(targetY - startY))
 	};
 	this.time = {
 		traveling: 0,
@@ -118,6 +92,7 @@ function Firework(startX, startY, targetX, targetY) {
 		hue: 0,
 		angle: 0
 	}
+
 	// fill previous coords array with starting coords
 	while(this.coords.previousCount--) {
 		this.coords.previous.push([this.coords.start.x, this.coords.start.y]);
@@ -160,10 +135,12 @@ Firework.prototype.draw = function() {
 	ctx.lineWidth = this.coords.previous.length / 5;
 	ctx.stroke();
 
-	// make ring around target
+	// make ring around the target
 	ctx.beginPath();
 	ctx.arc(this.coords.target.x, this.coords.target.y, 8, this.ring.angle, this.ring.angle + Math.PI * 4 / 3);
-	let opacity = this.time.max - this.time.traveling > 20 ? 10 : (this.time.max - this.time.traveling) * 0.5;
+
+	// when firework is near target, ring should slowly disappear
+	let opacity = this.time.max - this.time.traveling > 40 ? 10 : (this.time.max - this.time.traveling) * 0.25;
 	ctx.strokeStyle = `hsl(${this.ring.hue}, 100%, ${opacity}%)`;
 	ctx.stroke();	
 
@@ -213,7 +190,7 @@ Particle.prototype.update = function(index) {
 	// change opacity
 	this.alpha -= this.fade;
 
-	// stop tracking invisible particles to prevent performance issues
+	// remove invisible particles to prevent performance issues
 	if (this.alpha < this.fade) {
 		particleList.splice(index, 1);
 	}
@@ -225,7 +202,7 @@ Particle.prototype.draw = function() {
 	ctx.lineWidth = random(1, 3);
 	ctx.moveTo(this.coords.previous[0][0], this.coords.previous[0][1])
 	ctx.lineTo(this.coords.current.x, this.coords.current.y);
-	ctx.strokeStyle = 'hsla(' + this.hue + ', 100%, ' + this.brightness + '%, ' + this.alpha + ')';
+	ctx.strokeStyle = `hsla(${this.hue}, 100%, ${this.brightness}%, ${this.alpha})`;
 	ctx.stroke();
 };
 
@@ -235,35 +212,46 @@ Particle.prototype.draw = function() {
 // necessary variables
 	// array for stars
 	var starList = [];
-	// number of stars at screen
+	// number of stars on screen at the same time
 	var starCount = 100;
 
 function Star(maxX, maxY) {
 	this.coords = {
 		x: Math.floor(random(0, maxX)),
 		y: Math.floor(random(0, maxY))
-	}
+	};
 	this.size = Math.ceil(random(0, 2));
 	this.life = {
 		current: 0,
-		target: Math.floor(random(100, 300))
-	}
-	this.alpha = 0
+		target: Math.floor(random(150, 300))
+	};
+	this.alpha = 0;
 }
 
 Star.prototype.update = function(index) {
-	this.alpha = -4 / this.life.target / this.life.target * this.life.current * (this.life.current - this.life.target);
-	if(this.alpha < 0) {
-		starList.splice(index, 1);
-	} else {
-		this.life.current++;
-	}
+	// v0.2.1 - smooth shining
+	// star's opacity should slowly increase to 1 at the first half of it's lifespan and then decrease
+	// we will create parabola formula for calculating opacity
+	// zeros of it are at 0 and max lifespan, so from intercept form: y = a(x - x1)(x - x2):
+	// opacity = at(t - max) where t is current time and max is maximum lifespan
+	// at half of lifespan opacity should be 1 -> half of the lifespan is max / 2
+	// 1 = a * max / 2 * (max / 2 - max)
+	// 1 = - a * max / 2 * max / 2
+	// 4 = - a * max ^ 2 
+	// a = - 4 / max ^ 2 
+	// so our opacity formula is: opacity = -4t(t - max) / max ^ 2
+	// now for any maximum lifespan, maximum opacity is 1
+	this.alpha = -4 * this.life.current * (this.life.current - this.life.target) / Math.pow(this.life.target, 2);
+
+	// if alpha is negative, remove star from the list
+	this.alpha < 0 ? starList.splice(index, 1) : this.life.current++;
 };
 
 Star.prototype.draw = function() {
+	// draw stars as circles
 	ctx.beginPath();
 	ctx.arc(this.coords.x, this.coords.y, this.size, 0, 2 * Math.PI);
-	ctx.fillStyle = `hsla(60, 100%, ${random(30,100)}%, ${this.alpha * 0.08}`;
+	ctx.fillStyle = `hsla(60, 100%, 70%, ${this.alpha * 0.08}`;
 	ctx.fill();
 };
 
@@ -290,12 +278,13 @@ function loop() {
 		particleList[i].draw();
 		particleList[i].update(i);
 	}
-
 	i = starList.length;
 	while(i--) {
 		starList[i].draw();
 		starList[i].update(i);
 	}
+
+	// create new stars if there are less of them than desired number
 	while(starList.length < starCount) {
 		starList.push(new Star(canvas.width, canvas.height));
 	}
@@ -336,4 +325,42 @@ canvas.addEventListener('mousedown', () => mouse.isPressed = true);
 canvas.addEventListener('mouseup', () => mouse.isPressed = false);
 
 window.onload = loop;
+}());
+
+// CSS linear gradient caused some banding - it isn't smooth,
+// so I've made same gradient in Photoshop with dithering
+// this function loads it in background and sets to body background when loaded
+(function() {
+	var gradientImage = new Image();
+	gradientImage.src = 'background.png';
+	gradientImage.onload = function() {
+		document.body.className = "background-loaded"
+	}
+}());
+
+// requestAnimationFrame polyfill by Erik Möller. fixes from Paul Irish and Tino Zijdel
+// https://gist.github.com/paulirish/1579671
+(function() {
+    var lastTime = 0;
+    var vendors = ['ms', 'moz', 'webkit', 'o'];
+    for(var x = 0; x < vendors.length && !window.requestAnimationFrame; ++x) {
+        window.requestAnimationFrame = window[vendors[x]+'RequestAnimationFrame'];
+        window.cancelAnimationFrame = window[vendors[x]+'CancelAnimationFrame'] 
+                                   || window[vendors[x]+'CancelRequestAnimationFrame'];
+    }
+ 
+    if (!window.requestAnimationFrame)
+        window.requestAnimationFrame = function(callback, element) {
+            var currTime = new Date().getTime();
+            var timeToCall = Math.max(0, 16 - (currTime - lastTime));
+            var id = window.setTimeout(function() { callback(currTime + timeToCall); }, 
+              timeToCall);
+            lastTime = currTime + timeToCall;
+            return id;
+        };
+ 
+    if (!window.cancelAnimationFrame)
+        window.cancelAnimationFrame = function(id) {
+            clearTimeout(id);
+        };
 }());

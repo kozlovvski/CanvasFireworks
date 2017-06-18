@@ -7,12 +7,18 @@
 		body {
 			padding: 0;
 			margin: 0;
-			background: linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,10,30,1) 100%);
 			cursor: pointer;
+			background: linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,10,30,1) 100%);
 		}
 
 		canvas {
 			display: block;
+		}
+
+		.background-loaded {
+			/* smoother gradient which is set to body background when loaded */
+			background: url(background.png);
+			background-size: 100% 100%;
 		}
 	</style>
 </head>
