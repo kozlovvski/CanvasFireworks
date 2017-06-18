@@ -324,18 +324,22 @@ canvas.addEventListener('mousemove', function(e) {
 canvas.addEventListener('mousedown', () => mouse.isPressed = true);
 canvas.addEventListener('mouseup', () => mouse.isPressed = false);
 
-window.onload = loop;
-}());
-
 // CSS linear gradient caused some banding - it isn't smooth,
 // so I've made same gradient in Photoshop with dithering
 // this function loads it in background and sets to body background when loaded
-(function() {
+function preload() {
 	var gradientImage = new Image();
 	gradientImage.src = 'background.png';
 	gradientImage.onload = function() {
 		document.body.className = "background-loaded"
 	}
+};
+
+window.onload = function() {
+	preload();
+	loop();
+};
+
 }());
 
 // requestAnimationFrame polyfill by Erik Möller. fixes from Paul Irish and Tino Zijdel
