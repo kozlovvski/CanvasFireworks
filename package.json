@@ -4,7 +4,6 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "build": "webpack --mode production",
     "dev": "webpack --mode development"
   },
@@ -23,4 +22,4 @@
     "webpack": "^4.29.6",
     "webpack-cli": "^3.3.0"
   }
-}
+} 
