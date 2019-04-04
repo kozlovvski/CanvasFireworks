@@ -1,10 +1,11 @@
-const canvas = document.querySelector('.canvas-fireworks');
-const ctx = canvas.getContext('2d');
+// canvas setup
+var canvas = document.querySelector('.canvas-fireworks'),
+	ctx = canvas.getContext('2d');
 
-const setupCanvas = () => {
+function setupCanvas() {
 	canvas.width = window.innerWidth;
 	canvas.height = window.innerHeight;
-}; setupCanvas();
+} setupCanvas();
 
 // change size on resize
 window.addEventListener('resize', () => {
@@ -15,42 +16,36 @@ window.addEventListener('resize', () => {
 // *** FIREWORKS ***
 
 // necessary variables
-// arrays for fireworks and its' particles
-var particleList = [],
-	fireworkList = [];
-// timer for loop
-var timer = {
-	count: 70,
-	total: 70
-};
-// limiter for mouse-clicked fireworks
-var limiter = {
-	count: 0,
-	total: 10
-};
-// gravitational acceleration
-const gravity = 0.08;
-// mouse info for click event
-var mouse = {
-	x: 0,
-	y: 0,
-	isPressed: false
-};
+	// arrays for fireworks and its' particles
+	var particleList = [],
+		fireworkList = [];
+	// timer for loop
+	var timer = {count: 70, total: 70};
+	// limiter for mouse-clicked fireworks
+	var limiter = {count: 0, total: 10};
+	// gravitational acceleration
+	const gravity = 0.08;
+	// mouse info for click event
+	var mouse = {
+		x: 0,
+		y: 0,
+		isPressed: false
+	};
 
 // necessary functions
-// calculate random value from range
-function random(from, to) {
-	return Math.random() * (to - from) + from;
-}
-
-// create the explosion
-function createParticles(startX, startY) {
-	const particleCount = 150,
-		givenHue = random(0, 360);
-	for (var i = 0; i < particleCount; i++) {
-		particleList.push(new Particle(startX, startY, givenHue));
+	// calculate random value from range
+	function random(from, to) {
+		return Math.random() * (to - from) + from;
 	}
-}
+
+	// create the explosion
+	function createParticles(startX, startY) {
+		const particleCount = 150,
+		      givenHue = random(0, 360);
+		for (var i = 0; i < particleCount; i++) {
+			particleList.push(new Particle(startX, startY, givenHue));
+		}
+	}
 
 // create the firework
 function Firework(startX, startY, targetX, targetY) {
@@ -68,19 +63,19 @@ function Firework(startX, startY, targetX, targetY) {
 		target: {
 			x: targetX,
 			y: targetY
-		}
+		} 
 	};
 
 	// v0.2 - parabolic trajectory
-	// by knowing gravitational acceleration, starting and target point,
-	// we can calculate initial velocity and travel time for the projectile in the gravitational field
-	// v0 = at
-	// h = v0t - at^2/2
-	// therefore v0 = sqrt(2ah) (as far as y-axis velocity is concerned)
-	// projectile will reach target height when it's y-axis velocity reaches 0
-	// then it also should reach it's x-axis destination - in the same time, so:
-	// s = u0t => u0 = s / t (we know both distance to travel and time in which this must be done)
-	// we will use these formulas to calculate initial velocity
+		// by knowing gravitational acceleration, starting and target point,
+		// we can calculate initial velocity and travel time for the projectile in the gravitational field
+		// v0 = at
+		// h = v0t - at^2/2
+		// therefore v0 = sqrt(2ah) (as far as y-axis velocity is concerned)
+		// projectile will reach target height when it's y-axis velocity reaches 0
+		// then it also should reach it's x-axis destination - in the same time, so:
+		// s = u0t => u0 = s / t (we know both distance to travel and time in which this must be done)
+		// we will use these formulas to calculate initial velocity
 	this.launchVelocity = {
 		// v0 = sqrt(2ah)
 		y: Math.sqrt(2 * gravity * Math.abs(targetY - startY)),
@@ -97,19 +92,19 @@ function Firework(startX, startY, targetX, targetY) {
 	}
 
 	// fill previous coords array with starting coords
-	while (this.coords.previousCount--) {
+	while(this.coords.previousCount--) {
 		this.coords.previous.push([this.coords.start.x, this.coords.start.y]);
 	};
 }
 
-Firework.prototype.update = function (index) {
+Firework.prototype.update = function(index) {
 	// update previous coords array
 	this.coords.previous.shift();
 	this.coords.previous.push([this.coords.current.x, this.coords.current.y]);
 	this.time.traveling++;
 
 	// check if destination has been reached
-	if (this.time.traveling >= this.time.max) {
+	if(this.time.traveling >= this.time.max) {
 		createParticles(this.coords.target.x, this.coords.target.y);
 
 		// delete this firework from the list
@@ -127,7 +122,7 @@ Firework.prototype.update = function (index) {
 	};
 }
 
-Firework.prototype.draw = function () {
+Firework.prototype.draw = function() { 
 	// move to the previous position and draw line to the current one
 	ctx.beginPath();
 	ctx.moveTo(this.coords.previous[0][0], this.coords.previous[0][1]);
@@ -145,7 +140,7 @@ Firework.prototype.draw = function () {
 	// when firework is near target, ring should slowly disappear
 	let opacity = this.time.max - this.time.traveling > 40 ? 10 : (this.time.max - this.time.traveling) * 0.25;
 	ctx.strokeStyle = `hsl(${this.ring.hue}, 100%, ${opacity}%)`;
-	ctx.stroke();
+	ctx.stroke();	
 
 }
 
@@ -161,11 +156,8 @@ function Particle(startX, startY, givenHue) {
 	}
 
 	// fill with starting values
-	while (this.coords.previousCount--) {
-		this.coords.previous.push({
-			x: startX,
-			y: startY
-		});
+	while(this.coords.previousCount--) {
+		this.coords.previous.push({x: startX, y: startY});
 	}
 
 	// set random angle and velocity
@@ -181,7 +173,7 @@ function Particle(startX, startY, givenHue) {
 	this.fade = random(0.015, 0.03);
 }
 
-Particle.prototype.update = function (index) {
+Particle.prototype.update = function(index) {
 	// remove last coords and push new ones
 	this.coords.previous.shift();
 	this.coords.previous.push([this.coords.current.x, this.coords.current.y]);
@@ -202,7 +194,7 @@ Particle.prototype.update = function (index) {
 	}
 };
 
-Particle.prototype.draw = function () {
+Particle.prototype.draw = function() { 
 	// move to the previous position and draw line to the current one
 	ctx.beginPath();
 	ctx.lineWidth = random(1, 3);
@@ -216,10 +208,10 @@ Particle.prototype.draw = function () {
 // *** STARS ***
 
 // necessary variables
-// array for stars
-var starList = [];
-// number of stars on screen at the same time
-var starCount = 100;
+	// array for stars
+	var starList = [];
+	// number of stars on screen at the same time
+	var starCount = 100;
 
 function Star(maxX, maxY) {
 	this.coords = {
@@ -234,7 +226,7 @@ function Star(maxX, maxY) {
 	this.alpha = 0;
 }
 
-Star.prototype.update = function (index) {
+Star.prototype.update = function(index) {
 	// v0.2.1 - smooth shining
 	// star's opacity should slowly increase to 1 at the first half of it's lifespan and then decrease
 	// we will create parabola formula for calculating opacity
@@ -253,7 +245,7 @@ Star.prototype.update = function (index) {
 	this.alpha < 0 ? starList.splice(index, 1) : this.life.current++;
 };
 
-Star.prototype.draw = function () {
+Star.prototype.draw = function() {
 	// draw stars as circles
 	ctx.beginPath();
 	ctx.arc(this.coords.x, this.coords.y, this.size, 0, 2 * Math.PI);
@@ -275,34 +267,34 @@ function loop() {
 
 	// draw and update everything
 	var i = fireworkList.length;
-	while (i--) {
+	while(i--) {
 		fireworkList[i].draw();
 		fireworkList[i].update(i);
 	}
 	i = particleList.length;
-	while (i--) {
+	while(i--) {
 		particleList[i].draw();
 		particleList[i].update(i);
 	}
 	i = starList.length;
-	while (i--) {
+	while(i--) {
 		starList[i].draw();
 		starList[i].update(i);
 	}
 
 	// create new stars if there are less of them than desired number
-	while (starList.length < starCount) {
+	while(starList.length < starCount) {
 		starList.push(new Star(canvas.width, canvas.height));
 	}
 
 	// make random fireworks
-	if (timer.count >= timer.total) {
+	if(timer.count >= timer.total) {
 		// set launch place
 		var startX = canvas.width / 2,
 			startY = canvas.height;
 
 		// set boundaries for explosion place
-		var finishX = startX + random(-canvas.width / 4, canvas.width / 4),
+		var	finishX = startX + random(-canvas.width / 4, canvas.width / 4),
 			finishY = random(canvas.height / 8, canvas.height / 3);
 
 		fireworkList.push(new Firework(startX, startY, finishX, finishY));
@@ -323,7 +315,7 @@ function loop() {
 }
 
 // mouse click events
-canvas.addEventListener('mousemove', function (e) {
+canvas.addEventListener('mousemove', function(e) {
 	mouse.x = e.pageX - canvas.offsetLeft;
 	mouse.y = e.pageY - canvas.offsetTop;
 });
@@ -336,42 +328,39 @@ canvas.addEventListener('mouseup', () => mouse.isPressed = false);
 function preload() {
 	var gradientImage = new Image();
 	gradientImage.src = 'background.png';
-	gradientImage.onload = function () {
+	gradientImage.onload = function() {
 		document.body.className = "background-loaded"
 	}
-}
+};
 
-window.onload = function () {
+window.onload = function() {
 	preload();
 	loop();
 };
 
-
 // requestAnimationFrame polyfill by Erik Möller. fixes from Paul Irish and Tino Zijdel
 // https://gist.github.com/paulirish/1579671
-(function () {
-	var lastTime = 0;
-	var vendors = ['ms', 'moz', 'webkit', 'o'];
-	for (var x = 0; x < vendors.length && !window.requestAnimationFrame; ++x) {
-		window.requestAnimationFrame = window[vendors[x] + 'RequestAnimationFrame'];
-		window.cancelAnimationFrame = window[vendors[x] + 'CancelAnimationFrame'] ||
-			window[vendors[x] + 'CancelRequestAnimationFrame'];
-	}
-
-	if (!window.requestAnimationFrame)
-		window.requestAnimationFrame = function (callback, element) {
-			var currTime = new Date().getTime();
-			var timeToCall = Math.max(0, 16 - (currTime - lastTime));
-			var id = window.setTimeout(function () {
-					callback(currTime + timeToCall);
-				},
-				timeToCall);
-			lastTime = currTime + timeToCall;
-			return id;
-		};
-
-	if (!window.cancelAnimationFrame)
-		window.cancelAnimationFrame = function (id) {
-			clearTimeout(id);
-		};
+(function() {
+    var lastTime = 0;
+    var vendors = ['ms', 'moz', 'webkit', 'o'];
+    for(var x = 0; x < vendors.length && !window.requestAnimationFrame; ++x) {
+        window.requestAnimationFrame = window[vendors[x]+'RequestAnimationFrame'];
+        window.cancelAnimationFrame = window[vendors[x]+'CancelAnimationFrame'] 
+                                   || window[vendors[x]+'CancelRequestAnimationFrame'];
+    }
+ 
+    if (!window.requestAnimationFrame)
+        window.requestAnimationFrame = function(callback, element) {
+            var currTime = new Date().getTime();
+            var timeToCall = Math.max(0, 16 - (currTime - lastTime));
+            var id = window.setTimeout(function() { callback(currTime + timeToCall); }, 
+              timeToCall);
+            lastTime = currTime + timeToCall;
+            return id;
+        };
+ 
+    if (!window.cancelAnimationFrame)
+        window.cancelAnimationFrame = function(id) {
+            clearTimeout(id);
+        };
 }());
