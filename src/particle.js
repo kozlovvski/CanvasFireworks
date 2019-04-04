@@ -39,7 +39,7 @@ export class Particle {
 		this.alpha -= this.fade;
 		// remove invisible particles to prevent performance issues
 		if (this.alpha < this.fade) {
-			particleList.splice(index, 1);
+			particleList.delete(this);
 		}
 	}
 	draw() {
