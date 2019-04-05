@@ -15,9 +15,10 @@ import {
 	fireworkList,
 	starList,
 	timer,
-	fireworkLimiter,
-	mouse
 } from "./globalVariables";
+import {
+	mouse
+} from "./mouse";
 
 // change size on resize
 window.addEventListener('resize', () => {
@@ -77,12 +78,11 @@ class Star {
 // app loop
 function loop() {
 	clearCanvas();
-	// make particles overlap each other
+
 	// draw and update everything
 	fireworkList.forEach(firework => {
 		if (firework.reachedTarget) {
 			firework.explode();
-			fireworkList.delete(firework);
 		} else {
 			firework.update();
 			firework.draw();
@@ -120,15 +120,14 @@ function loop() {
 		timer.count++;
 	}
 
-	if (mouse.isPressed) {
-		if (mouse.limiter.current > mouse.limiter.target) {
+	if (mouse.limiter.current >= mouse.limiter.target) {
+		if (mouse.isPressed) {
 			fireworkList.add(new Firework(canvas.width / 2, canvas.height, mouse.x, mouse.y));
 			mouse.limiter.current = 0;
-		} else {
-			mouse.limiter.current++;
 		}
-		
-	} 
+	} else {
+		mouse.limiter.current++;
+	}
 
 	window.requestAnimationFrame(loop);
 }

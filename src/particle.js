@@ -21,17 +21,17 @@ export class Particle {
 		this.velocity = randomBetween(0, 10);
 		// set slightly different hue for all particles in the same firework
 		this.hue = givenHue + randomBetween(-10, 10);
-		this.brightness = randomBetween(55, 65);
+		this.brightness = randomBetween(65, 75);
 		this.alpha = 1;
 		// set how fast particle disappears
 		this.fade = randomBetween(0.015, 0.03);
 	}
-	update(index) {
+	update() {
 		// remove last coords and push new ones
 		this.coords.previous.shift();
 		this.coords.previous.push([this.coords.current.x, this.coords.current.y]);
 		// slow down the particle
-		this.velocity *= 0.95;
+		this.velocity *= (1 - gravity);
 		// change coords
 		this.coords.current.x += Math.cos(this.angle) * this.velocity;
 		this.coords.current.y += Math.sin(this.angle) * this.velocity + gravity * 10;
@@ -45,7 +45,7 @@ export class Particle {
 	draw() {
 		// move to the previous position and draw line to the current one
 		ctx.beginPath();
-		ctx.lineWidth = randomBetween(1, 3);
+		ctx.lineWidth = randomBetween(2, 4);
 		ctx.moveTo(this.coords.previous[0][0], this.coords.previous[0][1]);
 		ctx.lineTo(this.coords.current.x, this.coords.current.y);
 		ctx.strokeStyle = `hsla(${this.hue}, 100%, ${this.brightness}%, ${this.alpha})`;

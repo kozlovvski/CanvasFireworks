@@ -2,7 +2,8 @@ import {
     gravity,
     trail,
     particleList,
-    particleCount
+    particleCount,
+    fireworkList
 } from './globalVariables';
 import {
     randomBetween
@@ -111,17 +112,8 @@ export class Firework {
     }
 
     draw() {
-        // move to the previous position and draw line to the current one
         this.drawTrail();
-
-        // make ring around the target
-        ctx.beginPath();
-        ctx.arc(this.coords.target.x, this.coords.target.y, 8, this.ring.angle, this.ring.angle + Math.PI * 4 / 3);
-
-        // when firework is near the target, the ring should slowly disappear
-        let opacity = this.time.toTravel - this.time.inAir > 40 ? 10 : (this.time.toTravel - this.time.inAir) * 0.25;
-        ctx.strokeStyle = `hsl(${this.ring.hue}, 100%, ${opacity}%)`;
-        ctx.stroke();
+        this.drawRing();
     }
 
     drawTrail() {
@@ -136,7 +128,7 @@ export class Firework {
 
             const opacity = i / trail.length;
 
-            ctx.strokeStyle = `hsla(40, 100%, 70%, ${opacity * 100}%)`
+            ctx.strokeStyle = `hsla(40, 100%, 30%, ${opacity * 100}%)`
             ctx.stroke();
 
             // if this is not the last position in array, start drawing new line
@@ -148,6 +140,19 @@ export class Firework {
 
     }
 
+    drawRing() {
+        ctx.beginPath();
+        ctx.arc(this.coords.target.x, this.coords.target.y, 8, this.ring.angle, this.ring.angle + Math.PI * 4 / 3);
+
+        // when firework is near the target, the ring should slowly disappear
+        let opacity = 1;
+        if (this.time.toTravel - this.time.inAir < 40) {
+            opacity = (this.time.toTravel - this.time.inAir) / 40 // gives fraction from 0 to 1
+        }
+        ctx.strokeStyle = `hsla(${this.ring.hue}, 100%, 20%, ${opacity * 100}%)`;
+        ctx.stroke();
+    }
+
     explode() {
         // select random color for particles in the same firework
         const givenHue = randomBetween(0, 360);
@@ -156,6 +161,7 @@ export class Firework {
         for (let i = 0; i < particleCount; i++) {
             particleList.add(new Particle(this.coords.target.x, this.coords.target.y, givenHue));
         }
+        fireworkList.delete(this);
     }
 
     get reachedTarget() {
