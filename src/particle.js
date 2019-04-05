@@ -1,6 +1,13 @@
-import {randomBetween} from "./utilityFunctions";
-import {gravity, particleList, fireworkList} from './globalVariables';
-import {ctx} from './canvas';
+import {
+	randomBetween
+} from "./utilityFunctions";
+import {
+	gravity,
+	particleList,
+} from './globalVariables';
+import {
+	ctx
+} from './canvas';
 
 export class Particle {
 	constructor(startX, startY, givenHue) {
@@ -10,11 +17,14 @@ export class Particle {
 				y: startY
 			},
 			previous: [],
-			previousCount: 5 // increase for stronger effect
+			previousCount: 6 // increase for stronger effect
 		};
 		// fill with starting values
 		while (this.coords.previousCount--) {
-			this.coords.previous.push({ x: startX, y: startY });
+			this.coords.previous.push({
+				x: startX,
+				y: startY
+			});
 		}
 		// set random angle and velocity
 		this.angle = randomBetween(0, Math.PI * 2);
@@ -22,23 +32,23 @@ export class Particle {
 		// set slightly different hue for all particles in the same firework
 		this.hue = givenHue + randomBetween(-10, 10);
 		this.brightness = randomBetween(65, 75);
-		this.alpha = 1;
+		this.opacity = 1;
 		// set how fast particle disappears
-		this.fade = randomBetween(0.015, 0.03);
+		this.fade = randomBetween(0.010, 0.03);
 	}
 	update() {
 		// remove last coords and push new ones
 		this.coords.previous.shift();
 		this.coords.previous.push([this.coords.current.x, this.coords.current.y]);
 		// slow down the particle
-		this.velocity *= (1 - gravity);
+		this.velocity *= 0.95;
 		// change coords
 		this.coords.current.x += Math.cos(this.angle) * this.velocity;
 		this.coords.current.y += Math.sin(this.angle) * this.velocity + gravity * 10;
 		// change opacity
-		this.alpha -= this.fade;
+		this.opacity -= this.fade;
 		// remove invisible particles to prevent performance issues
-		if (this.alpha < this.fade) {
+		if (this.opacity < this.fade) {
 			particleList.delete(this);
 		}
 	}
@@ -48,7 +58,7 @@ export class Particle {
 		ctx.lineWidth = randomBetween(2, 4);
 		ctx.moveTo(this.coords.previous[0][0], this.coords.previous[0][1]);
 		ctx.lineTo(this.coords.current.x, this.coords.current.y);
-		ctx.strokeStyle = `hsla(${this.hue}, 100%, ${this.brightness}%, ${this.alpha})`;
+		ctx.strokeStyle = `hsla(${this.hue}, 100%, ${this.brightness}%, ${this.opacity})`;
 		ctx.stroke();
 	}
 }

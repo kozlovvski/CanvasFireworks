@@ -5,7 +5,7 @@ import {
     particleCount,
     fireworkList,
     launchPosition,
-    timer,
+    fireworkTimer,
     targetRectangle
 } from './globalVariables';
 import {
@@ -17,7 +17,9 @@ import {
 import {
     Particle
 } from './particle';
-import { mouse } from './mouse';
+import {
+    mouse
+} from './mouse';
 
 export class Firework {
     // a Firework is constructed with given start and target point on canvas
@@ -96,8 +98,8 @@ export class Firework {
 
         // save current coords as previous
         this.coords.previous.push({
-                x: this.coords.current.x,
-                y: this.coords.current.y
+            x: this.coords.current.x,
+            y: this.coords.current.y
         });
         this.coords.previous.splice(0, 1);
 
@@ -132,7 +134,7 @@ export class Firework {
 
             const opacity = i / trail.length;
 
-            ctx.strokeStyle = `hsla(40, 100%, 30%, ${opacity * 100}%)`
+            ctx.strokeStyle = `hsla(40, 100%, 80%, ${opacity * 100}%)`
             ctx.stroke();
 
             // if this is not the last position in array, start drawing new line
@@ -153,7 +155,7 @@ export class Firework {
         if (this.time.toTravel - this.time.inAir < 40) {
             opacity = (this.time.toTravel - this.time.inAir) / 40 // gives fraction from 0 to 1
         }
-        ctx.strokeStyle = `hsla(${this.ring.hue}, 100%, 20%, ${opacity * 100}%)`;
+        ctx.strokeStyle = `hsla(${this.ring.hue}, 100%, 10%, ${opacity * 100}%)`;
         ctx.stroke();
     }
 
@@ -175,31 +177,27 @@ export class Firework {
 
 export const makeRandomFireworks = () => {
 
-    // timer.total sets interval for random firework generation
-    timer.current++;
+    // fireworkTimer.total sets interval for random firework generation
+    fireworkTimer.current++;
 
-    if (timer.current >= timer.total) {
+    if (fireworkTimer.current >= fireworkTimer.total) {
         // choose random point inside target area
-        const randomCoords = {
-            x: randomBetween(targetRectangle.x1, targetRectangle.x2),
-            y: randomBetween(targetRectangle.y1, targetRectangle.y2)
+        for (let i = 0; i < fireworkTimer.batch; i++) {       
+            const randomCoords = {
+                x: randomBetween(targetRectangle.x1, targetRectangle.x2),
+                y: randomBetween(targetRectangle.y1, targetRectangle.y2)
+            }
+            fireworkList.add(new Firework(launchPosition.x, launchPosition.y, randomCoords.x, randomCoords.y));
         }
-
-        fireworkList.add(new Firework(launchPosition.x, launchPosition.y, randomCoords.x, randomCoords.y));
-        timer.reset();
+        fireworkTimer.reset();
     }
 }
 
 export const makeMouseGeneratedFirework = () => {
-	if (mouse.limiter.current >= mouse.limiter.target) {
-        makeFirework();
+    if (mouse.limiter.current >= mouse.limiter.target) {
+        fireworkList.add(new Firework(launchPosition.x, launchPosition.y, mouse.x, mouse.y));
         mouse.limiter.reset();
     } else {
         mouse.limiter.current++;
     }
-}
-
-export const makeFirework = () => {
-    fireworkList.add(new Firework(launchPosition.x, launchPosition.y, mouse.x, mouse.y));
-    mouse.limiter.reset();
 }

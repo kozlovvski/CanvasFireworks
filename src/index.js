@@ -1,32 +1,34 @@
 import {
-	randomBetween
-} from "./utilityFunctions";
-import {
-	canvas,
-	setupCanvas,
+	updateCanvas,
 	clearCanvas
 } from "./canvas";
 import {
-	Firework, makeRandomFireworks, makeMouseGeneratedFirework
+	Firework,
+	makeRandomFireworks,
+	makeMouseGeneratedFirework
 } from './fireworks';
 import {
 	particleList,
 	fireworkList,
 	starList,
-	timer,
+	launchPosition,
 } from "./globalVariables";
 import {
 	mouse
 } from "./mouse";
-import { Star } from "./star";
+import {
+	Star, createStars
+} from "./star";
 
 window.onload = function () {
-	setupCanvas();
+	updateCanvas();
+	createStars();
 	loop();
 };
 
 window.addEventListener('resize', () => {
-	setupCanvas();
+	updateCanvas();
+	launchPosition.update();
 });
 
 // app loop
@@ -52,7 +54,7 @@ function loop() {
 
 	starList.forEach(star => {
 		if (star.disappeared) {
-			starList.remove(star)
+			starList.delete(star);
 			starList.add(new Star());
 		} else {
 			star.update();
@@ -60,8 +62,10 @@ function loop() {
 		}
 	})
 
-	if (mouse.isPressed) makeMouseGeneratedFirework;
+	if (mouse.isPressed) makeMouseGeneratedFirework();
 
-
+	console.log(particleList.size,
+		fireworkList.size,
+		starList.size)
 	window.requestAnimationFrame(loop);
 }

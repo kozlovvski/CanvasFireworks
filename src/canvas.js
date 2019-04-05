@@ -1,9 +1,17 @@
+import {
+	launchPosition,
+	targetRectangle
+} from "./globalVariables";
+
 export const canvas = document.querySelector('.canvas-fireworks');
 export const ctx = canvas.getContext('2d');
 
-export const setupCanvas = () => {
+export const updateCanvas = () => {
 	canvas.width = window.innerWidth;
 	canvas.height = window.innerHeight;
+
+	launchPosition.update();
+	targetRectangle.update();
 };
 
 export const clearCanvas = () => {

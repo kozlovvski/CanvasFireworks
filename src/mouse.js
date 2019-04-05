@@ -1,5 +1,6 @@
-import { canvas } from "./canvas";
-import { makeFirework } from "./fireworks";
+import {
+    canvas
+} from "./canvas";
 
 export const mouse = {
     x: 0,
@@ -8,22 +9,24 @@ export const mouse = {
     limiter: {
         current: 10,
         target: 10,
-        reset: () => {mouse.limiter.current = 0}
+        reset: () => {
+            mouse.limiter.current = 0
+        }
     }
 };
 
 canvas.addEventListener('mousemove', function (e) {
-	mouse.x = e.pageX - canvas.offsetLeft;
-	mouse.y = e.pageY - canvas.offsetTop;
+    mouse.x = e.pageX - canvas.offsetLeft;
+    mouse.y = e.pageY - canvas.offsetTop;
 });
 
 canvas.addEventListener('mousedown', function () {
-	mouse.isPressed = true;
+    mouse.isPressed = true;
 });
 
 canvas.addEventListener('mouseup', function () {
     mouse.isPressed = false;
-    mouse.limiter.current = 0;
-});
 
-canvas.addEventListener('click', makeFirework);
+    // make sure that everytime on click firework is generated
+    mouse.limiter.current = mouse.limiter.target;
+});
