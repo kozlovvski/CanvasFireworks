@@ -1,7 +1,6 @@
 export const canvas = document.querySelector('.canvas-fireworks');
 export const ctx = canvas.getContext('2d');
 
-
 export const setupCanvas = () => {
 	canvas.width = window.innerWidth;
 	canvas.height = window.innerHeight;

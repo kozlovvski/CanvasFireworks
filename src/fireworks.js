@@ -3,7 +3,10 @@ import {
     trail,
     particleList,
     particleCount,
-    fireworkList
+    fireworkList,
+    launchPosition,
+    timer,
+    targetRectangle
 } from './globalVariables';
 import {
     randomBetween
@@ -14,6 +17,7 @@ import {
 import {
     Particle
 } from './particle';
+import { mouse } from './mouse';
 
 export class Firework {
     // a Firework is constructed with given start and target point on canvas
@@ -167,4 +171,35 @@ export class Firework {
     get reachedTarget() {
         return this.time.inAir >= this.time.toTravel
     }
+}
+
+export const makeRandomFireworks = () => {
+
+    // timer.total sets interval for random firework generation
+    timer.current++;
+
+    if (timer.current >= timer.total) {
+        // choose random point inside target area
+        const randomCoords = {
+            x: randomBetween(targetRectangle.x1, targetRectangle.x2),
+            y: randomBetween(targetRectangle.y1, targetRectangle.y2)
+        }
+
+        fireworkList.add(new Firework(launchPosition.x, launchPosition.y, randomCoords.x, randomCoords.y));
+        timer.reset();
+    }
+}
+
+export const makeMouseGeneratedFirework = () => {
+	if (mouse.limiter.current >= mouse.limiter.target) {
+        makeFirework();
+        mouse.limiter.reset();
+    } else {
+        mouse.limiter.current++;
+    }
+}
+
+export const makeFirework = () => {
+    fireworkList.add(new Firework(launchPosition.x, launchPosition.y, mouse.x, mouse.y));
+    mouse.limiter.reset();
 }
