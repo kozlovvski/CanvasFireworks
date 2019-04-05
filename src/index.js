@@ -1,18 +1,30 @@
-const canvas = document.querySelector('.canvas-fireworks');
-export const ctx = canvas.getContext('2d');
-
-const setupCanvas = () => {
-	canvas.width = window.innerWidth;
-	canvas.height = window.innerHeight;
-}; setupCanvas();
+import {
+	randomBetween
+} from "./utilityFunctions";
+import {
+	canvas,
+	ctx,
+	setupCanvas,
+	clearCanvas
+} from "./canvas";
+import {
+	Firework
+} from './fireworks';
+import {
+	particleList,
+	fireworkList,
+	starList,
+	timer,
+	fireworkLimiter,
+	mouse
+} from "./globalVariables";
 
 // change size on resize
 window.addEventListener('resize', () => {
 	setupCanvas();
-	starList.clear();
 });
 
-import {Firework} from './fireworks';
+
 
 // *** STARS ***
 
@@ -60,21 +72,12 @@ class Star {
 	}
 }
 
-import {particleList, fireworkList, starList, timer, limiter, mouse} from "./globalVariables";
-import {randomBetween} from './utilityFunctions';
+
 
 // app loop
 function loop() {
-	window.requestAnimationFrame(loop);
-
-	// clearing canvas at desired opacity
-	ctx.globalCompositeOperation = 'destination-out';
-	ctx.fillStyle = "rgba(0, 0, 0, 0.3)";
-	ctx.fillRect(0, 0, canvas.width, canvas.height);
-
+	clearCanvas();
 	// make particles overlap each other
-	ctx.globalCompositeOperation = "lighter";
-
 	// draw and update everything
 	fireworkList.forEach(firework => {
 		if (firework.reachedTarget) {
@@ -97,18 +100,18 @@ function loop() {
 	})
 
 	// create new stars if there are less of them than desired number
-	while(starList.size < starCount) {
+	while (starList.size < starCount) {
 		starList.add(new Star(canvas.width, canvas.height));
 	}
 
 	// make random fireworks
-	if(timer.count >= timer.total) {
+	if (timer.count >= timer.total) {
 		// set launch place
 		var startX = canvas.width / 2,
 			startY = canvas.height;
 
 		// set boundaries for explosion place
-		var	finishX = startX + randomBetween(-canvas.width / 4, canvas.width / 4),
+		var finishX = startX + randomBetween(-canvas.width / 4, canvas.width / 4),
 			finishY = randomBetween(canvas.height / 8, canvas.height / 3);
 
 		fireworkList.add(new Firework(startX, startY, finishX, finishY));
@@ -117,64 +120,20 @@ function loop() {
 		timer.count++;
 	}
 
-	// limit mouse-made fireworks number
-	if (limiter.count >= limiter.total) {
-		if (mouse.isPressed) {
+	if (mouse.isPressed) {
+		if (mouse.limiter.current > mouse.limiter.target) {
 			fireworkList.add(new Firework(canvas.width / 2, canvas.height, mouse.x, mouse.y));
-			limiter.count = 0;
+			mouse.limiter.current = 0;
+		} else {
+			mouse.limiter.current++;
 		}
-	} else {
-		limiter.count++;
-	}
+		
+	} 
+
+	window.requestAnimationFrame(loop);
 }
 
-// mouse click events
-canvas.addEventListener('mousemove', function(e) {
-	mouse.x = e.pageX - canvas.offsetLeft;
-	mouse.y = e.pageY - canvas.offsetTop;
-});
-canvas.addEventListener('mousedown', () => mouse.isPressed = true);
-canvas.addEventListener('mouseup', () => mouse.isPressed = false);
-
-// CSS linear gradient caused some banding - it isn't smooth,
-// so I've made same gradient in Photoshop with dithering
-// this function loads it in background and sets to body background when loaded
-function preload() {
-	var gradientImage = new Image();
-	gradientImage.src = 'background.png';
-	gradientImage.onload = function() {
-		document.body.className = "background-loaded"
-	}
-}
-
-window.onload = function() {
-	preload();
+window.onload = function () {
+	setupCanvas();
 	loop();
 };
-
-// requestAnimationFrame polyfill by Erik Möller. fixes from Paul Irish and Tino Zijdel
-// https://gist.github.com/paulirish/1579671
-(function() {
-    var lastTime = 0;
-    var vendors = ['ms', 'moz', 'webkit', 'o'];
-    for(var x = 0; x < vendors.length && !window.requestAnimationFrame; ++x) {
-        window.requestAnimationFrame = window[vendors[x]+'RequestAnimationFrame'];
-        window.cancelAnimationFrame = window[vendors[x]+'CancelAnimationFrame'] 
-                                   || window[vendors[x]+'CancelRequestAnimationFrame'];
-    }
- 
-    if (!window.requestAnimationFrame)
-        window.requestAnimationFrame = function(callback, element) {
-            var currTime = new Date().getTime();
-            var timeToCall = Math.max(0, 16 - (currTime - lastTime));
-            var id = window.setTimeout(function() { callback(currTime + timeToCall); }, 
-              timeToCall);
-            lastTime = currTime + timeToCall;
-            return id;
-        };
- 
-    if (!window.cancelAnimationFrame)
-        window.cancelAnimationFrame = function(id) {
-            clearTimeout(id);
-        };
-}());

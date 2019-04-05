@@ -1,6 +1,6 @@
 import {randomBetween} from "./utilityFunctions";
 import {gravity, particleList, fireworkList} from './globalVariables';
-import {ctx} from './index';
+import {ctx} from './canvas';
 
 export class Particle {
 	constructor(startX, startY, givenHue) {

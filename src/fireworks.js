@@ -1,6 +1,6 @@
 import {
     gravity,
-    trailLength,
+    trail,
     particleList,
     particleCount
 } from './globalVariables';
@@ -9,7 +9,7 @@ import {
 } from './utilityFunctions';
 import {
     ctx
-} from './index';
+} from './canvas';
 import {
     Particle
 } from './particle';
@@ -23,8 +23,8 @@ export class Firework {
                 y: startY
             },
 
-            // trailLength works as a delay for saving coords
-            previous: new Array(trailLength).fill({
+            // trail.length works as a delay for saving coords
+            previous: new Array(trail.length).fill({
                 x: startX,
                 y: startY
             }),
@@ -91,8 +91,8 @@ export class Firework {
 
         // save current coords as previous
         this.coords.previous.push({
-            x: this.coords.current.x,
-            y: this.coords.current.y
+                x: this.coords.current.x,
+                y: this.coords.current.y
         });
         this.coords.previous.splice(0, 1);
 
@@ -112,13 +112,7 @@ export class Firework {
 
     draw() {
         // move to the previous position and draw line to the current one
-        ctx.beginPath();
-        ctx.moveTo(this.coords.previous[0].x, this.coords.previous[0].y);
-        ctx.lineTo(this.coords.current.x, this.coords.current.y);
-
-        ctx.strokeStyle = 'hsl(40, 100%, 70%)';
-        ctx.lineWidth = 1;
-        ctx.stroke();
+        this.drawTrail();
 
         // make ring around the target
         ctx.beginPath();
@@ -128,6 +122,30 @@ export class Firework {
         let opacity = this.time.toTravel - this.time.inAir > 40 ? 10 : (this.time.toTravel - this.time.inAir) * 0.25;
         ctx.strokeStyle = `hsl(${this.ring.hue}, 100%, ${opacity}%)`;
         ctx.stroke();
+    }
+
+    drawTrail() {
+        ctx.beginPath();
+        ctx.moveTo(this.coords.current.x, this.coords.current.y);
+
+        for (let i = this.coords.previous.length - 1; i > 0; i--) {
+            const position = this.coords.previous[i];
+
+            ctx.lineTo(position.x, position.y);
+            ctx.lineWidth = trail.width;
+
+            const opacity = i / trail.length;
+
+            ctx.strokeStyle = `hsla(40, 100%, 70%, ${opacity * 100}%)`
+            ctx.stroke();
+
+            // if this is not the last position in array, start drawing new line
+            if (i != 1) {
+                ctx.beginPath();
+                ctx.moveTo(position.x, position.y);
+            }
+        }
+
     }
 
     explode() {
