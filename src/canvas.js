@@ -16,5 +16,7 @@ export const updateCanvas = () => {
 
 export const clearCanvas = () => {
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+	// makes particles overlap eachother 
 	ctx.globalCompositeOperation = "lighter";
 }

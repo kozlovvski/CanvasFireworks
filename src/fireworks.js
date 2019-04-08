@@ -16,7 +16,7 @@ import {
 } from './canvas';
 import {
     Particle
-} from './particle';
+} from './particles';
 import {
     mouse
 } from './mouse';

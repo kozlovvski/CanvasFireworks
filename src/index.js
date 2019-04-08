@@ -3,7 +3,6 @@ import {
 	clearCanvas
 } from "./canvas";
 import {
-	Firework,
 	makeRandomFireworks,
 	makeMouseGeneratedFirework
 } from './fireworks';
@@ -18,7 +17,7 @@ import {
 } from "./mouse";
 import {
 	Star, createStars
-} from "./star";
+} from "./stars";
 
 window.onload = function () {
 	updateCanvas();
@@ -34,7 +33,10 @@ window.addEventListener('resize', () => {
 // app loop
 function loop() {
 
+	// once in a while fire a random firework so canvas is not empty
 	makeRandomFireworks();
+
+	// clear everything drawn in previous loop
 	clearCanvas();
 
 	// draw and update everything
@@ -62,10 +64,8 @@ function loop() {
 		}
 	})
 
+	// onclick generate a firework that will reach mouse position
 	if (mouse.isPressed) makeMouseGeneratedFirework();
 
-	console.log(particleList.size,
-		fireworkList.size,
-		starList.size)
 	window.requestAnimationFrame(loop);
 }
