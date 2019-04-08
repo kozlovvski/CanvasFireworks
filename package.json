@@ -29,6 +29,7 @@
     "webpack-cli": "^3.3.0"
   },
   "dependencies": {
+    "autoprefixer": "^9.5.1",
     "css-loader": "^2.1.1",
     "mini-css-extract-plugin": "^0.5.0",
     "node-sass": "^4.11.0",
@@ -36,5 +37,16 @@
     "postcss-preset-env": "^6.6.0",
     "sass-loader": "^7.1.0",
     "style-loader": "^0.23.1"
-  }
+  },
+  "postcss": {
+    "plugins": {
+      "postcss-preset-env": {},
+      "autoprefixer": {}
+    }
+  },
+  "browserslist": [
+    "last 2 version",
+    "not dead",
+    "iOS >= 9"
+  ]
 }

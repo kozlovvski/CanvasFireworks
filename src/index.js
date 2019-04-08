@@ -1,24 +1,24 @@
 import {
 	updateCanvas,
 	clearCanvas
-} from "./canvas";
+} from "./modules/canvas";
 import {
 	makeRandomFireworks,
 	makeMouseGeneratedFirework
-} from './fireworks';
+} from './modules/fireworks';
 import {
 	particleList,
 	fireworkList,
 	starList,
 	launchPosition,
-} from "./globalVariables";
+} from "./modules/globalVariables";
 import {
 	mouse
-} from "./mouse";
+} from "./modules/mouse";
 import {
 	Star,
 	createStars
-} from "./stars";
+} from "./modules/stars";
 import './style.scss';
 
 window.onload = () => {
