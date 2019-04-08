@@ -1,0 +1,29 @@
+body {
+    padding: 0;
+    margin: 0;
+    background: linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,10,30,1) 100%);
+}
+
+.canvas-fireworks {
+    display: block;
+    cursor: crosshair;
+}
+
+.controller {
+    z-index: 100;
+
+    position: absolute;
+    top: 50px;
+    left: 50px;
+
+    background-color: rgba(0, 0, 0, 0.7);
+
+    border: none;
+    border-radius: 5px;
+
+    color: #fff;
+
+    &__label {
+        font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif
+    }
+}

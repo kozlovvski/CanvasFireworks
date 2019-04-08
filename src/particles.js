@@ -4,6 +4,7 @@ import {
 import {
 	gravity,
 	particleList,
+	particleLength,
 } from './globalVariables';
 import {
 	ctx
@@ -16,23 +17,24 @@ export class Particle {
 				x: startX,
 				y: startY
 			},
-			previous: [],
-			previousCount: 6 // increase for stronger effect
+
+			// particleLength works as a delay for saving coords
+			previous: new Array(particleLength).fill({
+                x: startX,
+                y: startY
+            }),
 		};
-		// fill with starting values
-		while (this.coords.previousCount--) {
-			this.coords.previous.push({
-				x: startX,
-				y: startY
-			});
-		}
-		// set random angle and velocity
+
+		// set random launch angle and velocity
 		this.angle = randomBetween(0, Math.PI * 2);
 		this.velocity = randomBetween(0, 10);
+
 		// set slightly different hue for all particles in the same firework
 		this.hue = givenHue + randomBetween(-10, 10);
+
 		this.brightness = randomBetween(65, 75);
 		this.opacity = 1;
+
 		// set how fast particle disappears
 		this.fade = randomBetween(0.010, 0.03);
 	}
@@ -48,9 +50,6 @@ export class Particle {
 		// change opacity
 		this.opacity -= this.fade;
 		// remove invisible particles to prevent performance issues
-		if (this.opacity < this.fade) {
-			particleList.delete(this);
-		}
 	}
 	draw() {
 		// move to the previous position and draw line to the current one
@@ -60,5 +59,9 @@ export class Particle {
 		ctx.lineTo(this.coords.current.x, this.coords.current.y);
 		ctx.strokeStyle = `hsla(${this.hue}, 100%, ${this.brightness}%, ${this.opacity})`;
 		ctx.stroke();
+	}
+
+	get disappeared() {
+		return this.opacity < this.fade
 	}
 }

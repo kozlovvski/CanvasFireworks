@@ -1,10 +1,13 @@
+// this values will be editable in menu
+
 import {
     canvas
 } from "./canvas";
 import { randomBetween } from "./utilityFunctions";
 
 export const particleList = new Set();
-export const particleCount = 150;
+export const particleCount = 200;
+export const particleLength = 6;
 
 export const fireworkList = new Set();
 
@@ -23,7 +26,7 @@ export const fireworkTimer = {
 };
 
 // gravitational acceleration
-// larger value == fireworks are pulled to ground stronger
+// larger value == everything is pulled stronger towards ground
 export const gravity = 0.05;
 
 // defines time after which current coords are saved as previous 

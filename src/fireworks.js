@@ -29,7 +29,6 @@ export class Firework {
                 x: startX,
                 y: startY
             },
-
             // trail.length works as a delay for saving coords
             previous: new Array(trail.length).fill({
                 x: startX,
@@ -143,30 +142,31 @@ export class Firework {
                 ctx.moveTo(position.x, position.y);
             }
         }
-
     }
 
     drawRing() {
         ctx.beginPath();
         ctx.arc(this.coords.target.x, this.coords.target.y, 8, this.ring.angle, this.ring.angle + Math.PI * 4 / 3);
 
-        // when firework is near the target, the ring should slowly disappear
         let opacity = 1;
+        // when a firework is near target, the ring should slowly disappear
         if (this.time.toTravel - this.time.inAir < 40) {
             opacity = (this.time.toTravel - this.time.inAir) / 40 // gives fraction from 0 to 1
         }
-        ctx.strokeStyle = `hsla(${this.ring.hue}, 100%, 10%, ${opacity * 100}%)`;
+        ctx.strokeStyle = `hsla(${this.ring.hue}, 100%, 10%, ${opacity})`;
         ctx.stroke();
     }
 
     explode() {
-        // select random color for particles in the same firework
+        // select a random color for particles in the same firework
         const givenHue = randomBetween(0, 360);
 
         // create new particles in explosion location
         for (let i = 0; i < particleCount; i++) {
             particleList.add(new Particle(this.coords.target.x, this.coords.target.y, givenHue));
         }
+
+        // after creating particles, remove firework from set
         fireworkList.delete(this);
     }
 
@@ -181,8 +181,8 @@ export const makeRandomFireworks = () => {
     fireworkTimer.current++;
 
     if (fireworkTimer.current >= fireworkTimer.total) {
-        // choose random point inside target area
-        for (let i = 0; i < fireworkTimer.batch; i++) {       
+        for (let i = 0; i < fireworkTimer.batch; i++) {    
+            // choose random point inside target area   
             const randomCoords = {
                 x: randomBetween(targetRectangle.x1, targetRectangle.x2),
                 y: randomBetween(targetRectangle.y1, targetRectangle.y2)

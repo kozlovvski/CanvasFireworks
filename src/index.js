@@ -16,24 +16,21 @@ import {
 	mouse
 } from "./mouse";
 import {
-	Star, createStars
+	Star,
+	createStars
 } from "./stars";
+import './style.scss';
 
-window.onload = function () {
+window.onload = () => {
 	updateCanvas();
 	createStars();
 	loop();
 };
 
-window.addEventListener('resize', () => {
-	updateCanvas();
-	launchPosition.update();
-});
-
 // app loop
 function loop() {
 
-	// once in a while fire a random firework so canvas is not empty
+	// once in a while fire a random firework to prevent canvas being empty
 	makeRandomFireworks();
 
 	// clear everything drawn in previous loop
@@ -50,8 +47,12 @@ function loop() {
 	})
 
 	particleList.forEach(particle => {
-		particle.update();
-		particle.draw();
+		if (particle.disappeared) {
+			particleList.delete(particle);
+		} else {
+			particle.update();
+			particle.draw();
+		}
 	})
 
 	starList.forEach(star => {
@@ -69,3 +70,8 @@ function loop() {
 
 	window.requestAnimationFrame(loop);
 }
+
+window.addEventListener('resize', () => {
+	updateCanvas();
+	launchPosition.update();
+});
