@@ -17,12 +17,10 @@ export class Particle {
 				x: startX,
 				y: startY
 			},
-
-			// particleLength works as a delay for saving coords
 			previous: new Array(particleLength).fill({
-                x: startX,
-                y: startY
-            }),
+				x: startX,
+				y: startY
+			}),
 		};
 
 		// set random launch angle and velocity

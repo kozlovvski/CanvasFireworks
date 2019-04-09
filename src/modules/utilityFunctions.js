@@ -2,4 +2,3 @@
 export const randomBetween = (from, to) => {
 	return Math.random() * (to - from) + from;
 }
-

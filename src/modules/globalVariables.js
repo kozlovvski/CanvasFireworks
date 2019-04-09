@@ -1,9 +1,11 @@
 // this values will be editable in menu
-import "./controllerHandler";
+import "./controller";
 import {
     canvas
 } from "./canvas";
-import { randomBetween } from "./utilityFunctions";
+import {
+    randomBetween
+} from "./utilityFunctions";
 
 export const particleList = new Set();
 export const particleCount = 200;

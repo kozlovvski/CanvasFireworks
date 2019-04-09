@@ -20,7 +20,7 @@ import {
 	createStars
 } from "./modules/stars";
 import './style.scss';
-import './modules/controllerHandler';
+import './modules/controller';
 
 window.onload = () => {
 	updateCanvas();

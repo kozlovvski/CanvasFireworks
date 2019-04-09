@@ -29,7 +29,6 @@ export class Firework {
                 x: startX,
                 y: startY
             },
-            // trail.length works as a delay for saving coords
             previous: new Array(trail.length).fill({
                 x: startX,
                 y: startY
@@ -87,7 +86,7 @@ export class Firework {
         this.ring = {
             hue: 0,
             angle: 0,
-            sector: Math.PI * 4 / 3
+            sector: Math.PI * 4 / 3 // 0.66 of a full circle
         };
     }
 
@@ -107,7 +106,6 @@ export class Firework {
         this.coords.current.y -= this.velocity.y;
 
         // update velocity
-
         this.velocity.y -= gravity;
         // this.velocity.x doesn't change (we don't include drag in this calculations)
 
@@ -151,7 +149,7 @@ export class Firework {
         let opacity = 1;
         // when a firework is near target, the ring should slowly disappear
         if (this.time.toTravel - this.time.inAir < 40) {
-            opacity = (this.time.toTravel - this.time.inAir) / 40 // gives fraction from 0 to 1
+            opacity = (this.time.toTravel - this.time.inAir) / 40 // returns fraction from 0 to 1
         }
         ctx.strokeStyle = `hsla(${this.ring.hue}, 100%, 10%, ${opacity})`;
         ctx.stroke();

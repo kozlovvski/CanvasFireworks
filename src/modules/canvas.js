@@ -7,9 +7,11 @@ export const canvas = document.querySelector('.canvas-fireworks');
 export const ctx = canvas.getContext('2d');
 
 export const updateCanvas = () => {
+	// make canvas fill whole document
 	canvas.width = window.innerWidth;
 	canvas.height = window.innerHeight;
 
+	// update launch place and target place based on new canvas dimensions
 	launchPosition.update();
 	targetRectangle.update();
 };

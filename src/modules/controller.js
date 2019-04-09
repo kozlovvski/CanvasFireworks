@@ -1,4 +1,6 @@
-import { particleCount } from "./globalVariables";
+import {
+    particleCount
+} from "./globalVariables";
 
 document.getElementById("particle-count").addEventListener('input', () => {
     const input = document.getElementById("particle-count");

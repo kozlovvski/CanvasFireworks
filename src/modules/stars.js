@@ -5,7 +5,10 @@ import {
 	ctx,
 	canvas
 } from "./canvas";
-import { starCount, starList } from "./globalVariables";
+import {
+	starCount,
+	starList
+} from "./globalVariables";
 
 export class Star {
 	constructor() {
