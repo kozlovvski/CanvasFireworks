@@ -7,7 +7,7 @@
 <body>
 	<canvas class="canvas-fireworks"></canvas>
 	<!-- controller which updates values inside ./modules/globalVariables.js -->
-	<fieldset class="controller" style="display: none">
+	<fieldset class="controller popup popup--top-left" style="display: none">
 		<label for="particle-count" class="controller__label">
 			Particles:
 			<input type="range" id="particle-count" class="controller__input controller__range">
@@ -15,5 +15,9 @@
 		</label>
 		<!-- more inputs here -->
 	</fieldset>
+	<article class="popup popup--bottom-right">
+		<h3 class="popup__heading">Psst... wanna make a 🎆 firework? </h3>
+		<p class="popup__paragraph">Simply click somewhere or even click and hold for more awesomeness!</p>
+	</article>
 </body>
 </html>
