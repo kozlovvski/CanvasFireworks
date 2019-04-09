@@ -1,5 +1,5 @@
 // this values will be editable in menu
-
+import "./controllerHandler";
 import {
     canvas
 } from "./canvas";

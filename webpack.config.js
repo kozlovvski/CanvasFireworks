@@ -40,6 +40,7 @@ module.exports = {
       filename: "[name].css",
       chunkFilename: "[id].css"
     })
-  ]
+  ],
+  watch: true
 };
 

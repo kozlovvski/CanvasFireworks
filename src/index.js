@@ -20,6 +20,7 @@ import {
 	createStars
 } from "./modules/stars";
 import './style.scss';
+import './modules/controllerHandler';
 
 window.onload = () => {
 	updateCanvas();
@@ -71,6 +72,7 @@ function loop() {
 	window.requestAnimationFrame(loop);
 }
 
+// everytime user resizes window, make canvas fill whole document
 window.addEventListener('resize', () => {
 	updateCanvas();
 	launchPosition.update();
