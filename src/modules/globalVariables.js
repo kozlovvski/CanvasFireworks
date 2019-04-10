@@ -8,7 +8,7 @@ import {
 } from "./utilityFunctions";
 
 export const particleList = new Set();
-export const particleCount = 200;
+export let particleCount = 200;
 export const particleLength = 6;
 
 export const fireworkList = new Set();
