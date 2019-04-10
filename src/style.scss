@@ -17,7 +17,7 @@ body {
 
     height: auto;
 
-    padding: 0 20px;
+    padding: 20px;
 
     z-index: 2;
 
@@ -55,5 +55,11 @@ body {
     &--bottom-right {
         bottom: 20px;
         right: 20px;
+    }
+
+    &__heading {
+        font-size: 1.2em;
+        font-weight: 600;
+        margin-bottom: 20px;
     }
 }
