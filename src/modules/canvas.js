@@ -1,7 +1,4 @@
-import {
-	launchPosition,
-	targetRectangle
-} from "./variableControl";
+import {controller} from "./variableControl";
 
 export const canvas = document.querySelector('.canvas-fireworks');
 export const ctx = canvas.getContext('2d');
@@ -12,8 +9,8 @@ export const updateCanvas = () => {
 	canvas.height = window.innerHeight;
 
 	// update launch place and target place based on new canvas dimensions
-	launchPosition.update();
-	targetRectangle.update();
+	controller.launchPosition.update();
+	controller.targetRectangle.update();
 };
 
 export const clearCanvas = () => {

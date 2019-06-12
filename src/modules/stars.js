@@ -5,10 +5,7 @@ import {
 	ctx,
 	canvas
 } from "./canvas";
-import {
-	starCount,
-	starList
-} from "./variableControl";
+import {controller} from "./variableControl";
 
 export class Star {
 	constructor() {
@@ -48,7 +45,7 @@ export class Star {
 }
 
 export const createStars = () => {
-	for (let i = 0; i < starCount; i++) {
-		starList.add(new Star());
+	for (let i = 0; i < controller.star.count; i++) {
+		controller.star.list.add(new Star());
 	}
 }

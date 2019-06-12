@@ -1,13 +1,4 @@
-import {
-    gravity,
-    trail,
-    particleList,
-    particleCount,
-    fireworkList,
-    launchPosition,
-    fireworkTimer,
-    targetRectangle
-} from './variableControl';
+import {controller} from './variableControl';
 import {
     randomBetween
 } from './utilityFunctions';
@@ -29,7 +20,7 @@ export class Firework {
                 x: startX,
                 y: startY
             },
-            previous: new Array(trail.length).fill({
+            previous: new Array(controller.trail.length).fill({
                 x: startX,
                 y: startY
             }),
@@ -59,7 +50,7 @@ export class Firework {
             // h = v0t - at^2/2
 
             // therefore v0 = sqrt(2ah)
-            y: Math.sqrt(2 * gravity * (startY - targetY)),
+            y: Math.sqrt(2 * controller.gravity * (startY - targetY)),
 
             // at the same time it should also reach it's x-axis destination:
             // u0 = s / t 
@@ -71,7 +62,7 @@ export class Firework {
             // u0 = s / (v0 / a)
             // u0 = s * a / v0
 
-            x: (targetX - startX) * gravity / Math.sqrt(2 * gravity * (startY - targetY))
+            x: (targetX - startX) * controller.gravity / Math.sqrt(2 * controller.gravity * (startY - targetY))
         };
 
         // this property stores time that firework has traveled and is supposed to travel
@@ -79,7 +70,7 @@ export class Firework {
             inAir: 0,
 
             // t = v0 / a
-            toTravel: this.velocity.y / gravity
+            toTravel: this.velocity.y / controller.gravity
         };
 
         // this property stores values for a ring indicating firework target
@@ -106,7 +97,7 @@ export class Firework {
         this.coords.current.y -= this.velocity.y;
 
         // update velocity
-        this.velocity.y -= gravity;
+        this.velocity.y -= controller.gravity;
         // this.velocity.x doesn't change (we don't include drag in this calculations)
 
         // update target circle
@@ -127,9 +118,9 @@ export class Firework {
             const position = this.coords.previous[i];
 
             ctx.lineTo(position.x, position.y);
-            ctx.lineWidth = trail.width;
+            ctx.lineWidth = controller.trail.width;
 
-            const opacity = i / trail.length;
+            const opacity = i / controller.trail.length;
 
             ctx.strokeStyle = `hsla(40, 100%, 80%, ${opacity * 100}%)`
             ctx.stroke();
@@ -160,12 +151,12 @@ export class Firework {
         const givenHue = randomBetween(0, 360);
 
         // create new particles in explosion location
-        for (let i = 0; i < particleCount; i++) {
-            particleList.add(new Particle(this.coords.target.x, this.coords.target.y, givenHue));
+        for (let i = 0; i < controller.particle.count; i++) {
+            controller.particle.list.add(new Particle(this.coords.target.x, this.coords.target.y, givenHue));
         }
 
         // after creating particles, remove firework from set
-        fireworkList.delete(this);
+        controller.firework.list.delete(this);
     }
 
     get reachedTarget() {
@@ -175,25 +166,25 @@ export class Firework {
 
 export const makeRandomFireworks = () => {
 
-    // fireworkTimer.total sets interval for random firework generation
-    fireworkTimer.current++;
+    // controller.firework.timer.total sets interval for random firework generation
+    controller.firework.timer.current++;
 
-    if (fireworkTimer.current >= fireworkTimer.total) {
-        for (let i = 0; i < fireworkTimer.batch; i++) {    
+    if (controller.firework.timer.current >= controller.firework.timer.total) {
+        for (let i = 0; i < controller.firework.timer.batch; i++) {    
             // choose random point inside target area   
             const randomCoords = {
-                x: randomBetween(targetRectangle.x1, targetRectangle.x2),
-                y: randomBetween(targetRectangle.y1, targetRectangle.y2)
+                x: randomBetween(controller.targetRectangle.x1, controller.targetRectangle.x2),
+                y: randomBetween(controller.targetRectangle.y1, controller.targetRectangle.y2)
             }
-            fireworkList.add(new Firework(launchPosition.x, launchPosition.y, randomCoords.x, randomCoords.y));
+            controller.firework.list.add(new Firework(controller.launchPosition.x, controller.launchPosition.y, randomCoords.x, randomCoords.y));
         }
-        fireworkTimer.reset();
+        controller.firework.timer.reset();
     }
 }
 
 export const makeMouseGeneratedFirework = () => {
     if (mouse.limiter.current >= mouse.limiter.target) {
-        fireworkList.add(new Firework(launchPosition.x, launchPosition.y, mouse.x, mouse.y));
+        controller.firework.list.add(new Firework(controller.launchPosition.x, controller.launchPosition.y, mouse.x, mouse.y));
         mouse.limiter.reset();
     } else {
         mouse.limiter.current++;

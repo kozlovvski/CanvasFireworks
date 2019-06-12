@@ -6,12 +6,7 @@ import {
 	makeRandomFireworks,
 	makeMouseGeneratedFirework
 } from './modules/fireworks';
-import {
-	particleList,
-	fireworkList,
-	starList,
-	launchPosition,
-} from "./modules/variableControl";
+import {controller} from "./modules/variableControl";
 import {
 	mouse
 } from "./modules/mouse";
@@ -37,7 +32,7 @@ function loop() {
 	clearCanvas();
 
 	// draw and update everything
-	fireworkList.forEach(firework => {
+	controller.firework.list.forEach(firework => {
 		if (firework.reachedTarget) {
 			firework.explode();
 		} else {
@@ -46,19 +41,19 @@ function loop() {
 		}
 	})
 
-	particleList.forEach(particle => {
+	controller.particle.list.forEach(particle => {
 		if (particle.disappeared) {
-			particleList.delete(particle);
+			controller.particle.list.delete(particle);
 		} else {
 			particle.update();
 			particle.draw();
 		}
 	})
 
-	starList.forEach(star => {
+	controller.star.list.forEach(star => {
 		if (star.disappeared) {
-			starList.delete(star);
-			starList.add(new Star());
+			controller.star.list.delete(star);
+			controller.star.list.add(new Star());
 		} else {
 			star.update();
 			star.draw();
@@ -74,5 +69,5 @@ function loop() {
 // everytime user resizes window, make canvas fill whole document
 window.addEventListener('resize', () => {
 	updateCanvas();
-	launchPosition.update();
+	controllerlaunchPosition.update();
 });

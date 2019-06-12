@@ -1,11 +1,7 @@
 import {
 	randomBetween
 } from "./utilityFunctions";
-import {
-	gravity,
-	particleList,
-	particleLength,
-} from './variableControl';
+import {controller} from './variableControl';
 import {
 	ctx
 } from './canvas';
@@ -17,7 +13,7 @@ export class Particle {
 				x: startX,
 				y: startY
 			},
-			previous: new Array(particleLength).fill({
+			previous: new Array(controller.particle.length).fill({
 				x: startX,
 				y: startY
 			}),
@@ -44,7 +40,7 @@ export class Particle {
 		this.velocity *= 0.95;
 		// change coords
 		this.coords.current.x += Math.cos(this.angle) * this.velocity;
-		this.coords.current.y += Math.sin(this.angle) * this.velocity + gravity * 10;
+		this.coords.current.y += Math.sin(this.angle) * this.velocity + controller.gravity * 10;
 		// change opacity
 		this.opacity -= this.fade;
 		// remove invisible particles to prevent performance issues
