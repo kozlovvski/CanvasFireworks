@@ -29,6 +29,8 @@ export class Star {
 		} else if (this.life.current > this.life.target - 50) {
 			this.opacity = (this.life.target - this.life.current) / 50 // decreases from 1 to 0
 		} else this.opacity = 1;
+
+		return this;
 	}
 
 	draw() {
@@ -37,6 +39,8 @@ export class Star {
 		ctx.arc(this.coords.x, this.coords.y, this.size, 0, 2 * Math.PI);
 		ctx.fillStyle = `hsla(60, 100%, 20%, ${this.opacity}`;
 		ctx.fill();
+
+		return this;
 	}
 
 	get disappeared() {

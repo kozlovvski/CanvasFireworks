@@ -32,6 +32,7 @@ export class Particle {
 		// set how fast particle disappears
 		this.fade = randomBetween(0.010, 0.03);
 	}
+	
 	update() {
 		// remove last coords and push new ones
 		this.coords.previous.shift();
@@ -44,7 +45,10 @@ export class Particle {
 		// change opacity
 		this.opacity -= this.fade;
 		// remove invisible particles to prevent performance issues
+
+		return this;
 	}
+
 	draw() {
 		// move to the previous position and draw line to the current one
 		ctx.beginPath();
@@ -53,6 +57,8 @@ export class Particle {
 		ctx.lineTo(this.coords.current.x, this.coords.current.y);
 		ctx.strokeStyle = `hsla(${this.hue}, 100%, ${this.brightness}%, ${this.opacity})`;
 		ctx.stroke();
+
+		return this;
 	}
 
 	get disappeared() {

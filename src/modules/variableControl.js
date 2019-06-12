@@ -32,6 +32,7 @@ export const controller = {
             batch: 1,
             reset() {
                 controller.firework.timer.current = randomBetween(0, controller.firework.timer.random);
+                return controller.firework.timer;
             }
         }
     },
@@ -59,6 +60,8 @@ export const controller = {
         update() {
             controller.launchPosition.x = canvas.width / 2;
             controller.launchPosition.y = canvas.height;
+
+            return controller.launchPosition;
         }
     },
 
@@ -73,17 +76,19 @@ export const controller = {
             controller.targetRectangle.x2 = canvas.width * 0.75;
             controller.targetRectangle.y1 = canvas.height * 0.25;
             controller.targetRectangle.y2 = canvas.height * 0.5;
+
+            return controller.targetRectangle;
         }
     }
 }
 
-// document.getElementById("particle-count").addEventListener('input', () => {
-//     const input = document.getElementById("particle-count");
-//     updateOutput(input);
-//     particleCount = input.value;
-// });
+document.getElementById("particle-count").addEventListener('input', () => {
+    const input = document.getElementById("particle-count");
+    updateOutput(input);
+    controller.particle.count = input.value;
+});
 
-// function updateOutput(input) {
-//     const output = document.querySelector(`output[for=${input.id}]`);
-//     output.value = input.value;
-// }
+function updateOutput(input) {
+    const output = document.querySelector(`output[for=${input.id}]`);
+    output.value = input.value;
+}

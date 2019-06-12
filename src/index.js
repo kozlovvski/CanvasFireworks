@@ -1,3 +1,7 @@
+// 
+// imports
+// 
+
 import {
 	updateCanvas,
 	clearCanvas
@@ -6,7 +10,9 @@ import {
 	makeRandomFireworks,
 	makeMouseGeneratedFirework
 } from './modules/fireworks';
-import {controller} from "./modules/variableControl";
+import {
+	controller
+} from "./modules/variableControl";
 import {
 	mouse
 } from "./modules/mouse";
@@ -16,13 +22,26 @@ import {
 } from "./modules/stars";
 import './style.scss';
 
+// 
+// MAIN
+// 
+
 window.onload = () => {
 	updateCanvas();
 	createStars();
 	loop();
 };
 
+// everytime user resizes window, make canvas fill whole document
+window.addEventListener('resize', () => {
+	updateCanvas();
+	controller.launchPosition.update();
+});
+
+// 
 // app loop
+// 
+
 function loop() {
 
 	// once in a while fire a random firework to prevent canvas being empty
@@ -36,8 +55,7 @@ function loop() {
 		if (firework.reachedTarget) {
 			firework.explode();
 		} else {
-			firework.update();
-			firework.draw();
+			firework.update().draw();
 		}
 	})
 
@@ -45,8 +63,7 @@ function loop() {
 		if (particle.disappeared) {
 			controller.particle.list.delete(particle);
 		} else {
-			particle.update();
-			particle.draw();
+			particle.update().draw();
 		}
 	})
 
@@ -55,8 +72,7 @@ function loop() {
 			controller.star.list.delete(star);
 			controller.star.list.add(new Star());
 		} else {
-			star.update();
-			star.draw();
+			star.update().draw();
 		}
 	})
 
@@ -65,9 +81,3 @@ function loop() {
 
 	window.requestAnimationFrame(loop);
 }
-
-// everytime user resizes window, make canvas fill whole document
-window.addEventListener('resize', () => {
-	updateCanvas();
-	controllerlaunchPosition.update();
-});

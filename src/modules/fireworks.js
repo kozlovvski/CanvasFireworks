@@ -1,4 +1,10 @@
-import {controller} from './variableControl';
+// 
+// imports
+// 
+
+import {
+    controller
+} from './variableControl';
 import {
     randomBetween
 } from './utilityFunctions';
@@ -12,6 +18,9 @@ import {
     mouse
 } from './mouse';
 
+// 
+// MAIN
+// 
 export class Firework {
     // a Firework is constructed with given start and target point on canvas
     constructor(startX, startY, targetX, targetY) {
@@ -103,11 +112,15 @@ export class Firework {
         // update target circle
         this.ring.hue += 2;
         this.ring.angle += 0.04;
+
+        return this;
     }
 
     draw() {
         this.drawTrail();
         this.drawRing();
+
+        return this;
     }
 
     drawTrail() {
@@ -170,7 +183,7 @@ export const makeRandomFireworks = () => {
     controller.firework.timer.current++;
 
     if (controller.firework.timer.current >= controller.firework.timer.total) {
-        for (let i = 0; i < controller.firework.timer.batch; i++) {    
+        for (let i = 0; i < controller.firework.timer.batch; i++) {
             // choose random point inside target area   
             const randomCoords = {
                 x: randomBetween(controller.targetRectangle.x1, controller.targetRectangle.x2),
