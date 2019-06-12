@@ -7,7 +7,7 @@ import {
     launchPosition,
     fireworkTimer,
     targetRectangle
-} from './globalVariables';
+} from './variableControl';
 import {
     randomBetween
 } from './utilityFunctions';

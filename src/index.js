@@ -11,7 +11,7 @@ import {
 	fireworkList,
 	starList,
 	launchPosition,
-} from "./modules/globalVariables";
+} from "./modules/variableControl";
 import {
 	mouse
 } from "./modules/mouse";
@@ -20,7 +20,6 @@ import {
 	createStars
 } from "./modules/stars";
 import './style.scss';
-import './modules/controller';
 
 window.onload = () => {
 	updateCanvas();

@@ -1,6 +1,6 @@
 import {
     particleCount
-} from "./globalVariables";
+} from "./variableControl";
 
 document.getElementById("particle-count").addEventListener('input', () => {
     const input = document.getElementById("particle-count");

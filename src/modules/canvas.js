@@ -1,7 +1,7 @@
 import {
 	launchPosition,
 	targetRectangle
-} from "./globalVariables";
+} from "./variableControl";
 
 export const canvas = document.querySelector('.canvas-fireworks');
 export const ctx = canvas.getContext('2d');

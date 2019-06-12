@@ -5,7 +5,7 @@ import {
 	gravity,
 	particleList,
 	particleLength,
-} from './globalVariables';
+} from './variableControl';
 import {
 	ctx
 } from './canvas';

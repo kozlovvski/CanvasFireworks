@@ -30,3 +30,7 @@ canvas.addEventListener('mouseup', () => {
     // make sure that on next click a firework is created
     mouse.limiter.current = mouse.limiter.target;
 });
+
+canvas.addEventListener('click', function (e) {
+    console.log(e);
+});

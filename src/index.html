@@ -3,11 +3,13 @@
 <head>
 	<title>Fireworks 🔥</title>
 	<meta charset="utf-8">
+
+	<link rel="stylesheet" href="<%=htmlWebpackPlugin.files.chunks.main.css %>">
 </head>
 <body>
 	<canvas class="canvas-fireworks"></canvas>
 	<!-- controller which updates values inside ./modules/globalVariables.js -->
-	<fieldset class="controller popup popup--top-left" style="display: none">
+	<fieldset class="controller popup popup--top-left">
 		<label for="particle-count" class="controller__label">
 			Particles:
 			<input type="range" id="particle-count" class="controller__input controller__range">
@@ -19,5 +21,7 @@
 		<h3 class="popup__heading">Psst... wanna make a 🎆 firework? </h3>
 		<p class="popup__paragraph">Simply click somewhere or even click and hold for more awesomeness!</p>
 	</article>
+
+	<script defer src="<%= htmlWebpackPlugin.files.chunks.main.entry %>"></script>
 </body>
 </html>

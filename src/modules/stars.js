@@ -8,7 +8,7 @@ import {
 import {
 	starCount,
 	starList
-} from "./globalVariables";
+} from "./variableControl";
 
 export class Star {
 	constructor() {
