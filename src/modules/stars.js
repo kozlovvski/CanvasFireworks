@@ -48,8 +48,8 @@ export class Star {
 	}
 }
 
-export const createStars = () => {
-	for (let i = 0; i < controller.star.count; i++) {
+export const createNewStars = () => {
+	while(controller.star.list.size < controller.star.count) {
 		controller.star.list.add(new Star());
 	}
 }

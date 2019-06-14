@@ -88,6 +88,8 @@ export class Firework {
             angle: 0,
             sector: Math.PI * 4 / 3 // 0.66 of a full circle
         };
+
+        this.gravity = controller.gravity;
     }
 
     update() {
@@ -106,7 +108,7 @@ export class Firework {
         this.coords.current.y -= this.velocity.y;
 
         // update velocity
-        this.velocity.y -= controller.gravity;
+        this.velocity.y -= this.gravity;
         // this.velocity.x doesn't change (we don't include drag in this calculations)
 
         // update target circle
@@ -156,6 +158,7 @@ export class Firework {
             opacity = (this.time.toTravel - this.time.inAir) / 40 // returns fraction from 0 to 1
         }
         ctx.strokeStyle = `hsla(${this.ring.hue}, 100%, 10%, ${opacity})`;
+        ctx.lineWidth = 2;
         ctx.stroke();
     }
 

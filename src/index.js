@@ -18,8 +18,7 @@ import {
 	mouse
 } from "./modules/mouse";
 import {
-	Star,
-	createStars
+	createNewStars
 } from "./modules/stars";
 import './style.scss';
 
@@ -29,7 +28,7 @@ import './style.scss';
 
 window.onload = () => {
 	updateCanvas();
-	createStars();
+	createNewStars();
 	initializeInputs();
 	loop();
 };
@@ -72,11 +71,10 @@ function loop() {
 	controller.star.list.forEach(star => {
 		if (star.disappeared) {
 			controller.star.list.delete(star);
-			controller.star.list.add(new Star());
 		} else {
 			star.update().draw();
 		}
-	})
+	}); createNewStars();
 
 	// onclick generate a firework that will reach mouse position
 	if (mouse.isPressed) makeMouseGeneratedFirework();

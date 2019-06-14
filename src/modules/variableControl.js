@@ -85,8 +85,9 @@ export const controller = {
 
 document.querySelectorAll(".controller__input").forEach(input => {
     input.addEventListener('input', () => {
+        debugger;
         const variablePath = input.id.replace(/-/g, ".");
-        set(controller, variablePath, parseInt(input.value));
+        set(controller, variablePath, parseFloat(input.value));
         updateOutput(input);
     });
 });

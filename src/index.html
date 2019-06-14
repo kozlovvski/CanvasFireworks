@@ -10,34 +10,63 @@
 
 <body>
 	<canvas class="canvas-fireworks"></canvas>
-	<!-- controller which updates values inside ./modules/globalVariables.js -->
-	<div class="controller popup popup--top-left">
+	<div class="controller">
 		<div class="controller__group">
 			<label for="particle-count" class="controller__label">
 				Particle number:
 			</label>
 			<input type="range" id="particle-count" class="controller__input" min="0" max="300">
-			<output class="controller__output" name="particle-count-output" for="particle-count">
+			<output class="controller__output" name="particle-count-output" for="particle-count"></output>
+			<p class="controller__tooltip">Determines how many particles should be created when firework explodes.</p>
 		</div>
 
 		<div class="controller__group">
 			<label for="particle-length" class="controller__label">
 				Particle length:
 			</label>
-			<input type="range" id="particle-length" class="controller__input" min="0" max="10">
-			<output class="controller__output" name="particle-length-output" for="particle-length">
+			<input type="range" id="particle-length" class="controller__input" min="0" max="20">
+			<output class="controller__output" name="particle-length-output" for="particle-length"></output>
+			<p class="controller__tooltip">Determines how long trace particles will leave.</p>
 		</div>
-		
+
 		<div class="controller__group">
 			<label for="star-count" class="controller__label">
 				Star number:
 			</label>
-			<input type="range" id="star-count" class="controller__input" min="0" max="200">
-			<output class="controller__output" name="star-count-output" for="star-count">
+			<input type="range" id="star-count" class="controller__input" min="0" max="500">
+			<output class="controller__output" name="star-count-output" for="star-count"></output>
+			<p class="controller__tooltip">Determines how many stars should be created in background.</p>
 		</div>
-		<!-- more inputs here -->
+
+		<div class="controller__group">
+			<label for="gravity" class="controller__label">
+				Gravity:
+			</label>
+			<input type="range" id="gravity" class="controller__input" min="0.01" max="0.5" step="0.01">
+			<output class="controller__output" name="gravity-output" for="gravity"></output>
+			<p class="controller__tooltip">Determines how strong particles and fireworks are pulled to the ground.</p>
+		</div>
+
+		<div class="controller__group">
+			<label for="trail-length" class="controller__label">
+				Trail length:
+			</label>
+			<input type="range" id="trail-length" class="controller__input" min="0" max="30">
+			<output class="controller__output" name="trail-length-output" for="trail-length"></output>
+			<p class="controller__tooltip">Determines how long is the trace left by a firework.</p>
+		</div>
+
+		<div class="controller__group">
+			<label for="trail-width" class="controller__label">
+				Trail width:
+			</label>
+			<input type="range" id="trail-width" class="controller__input" min="0" max="10">
+			<output class="controller__output" name="trail-width-output" for="trail-width"></output>
+			<p class="controller__tooltip">Determines how wide is the trace left by a firework.</p>
+		</div>
+
 	</div>
-	<article class="popup popup--bottom-right">
+	<article class="popup">
 		<h3 class="popup__heading">Psst... wanna make a 🎆 firework? </h3>
 		<p class="popup__paragraph">Simply click somewhere or even click and hold for more awesomeness!</p>
 	</article>
