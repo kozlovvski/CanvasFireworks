@@ -1,22 +1,42 @@
 <!DOCTYPE html>
 <html>
+
 <head>
 	<title>Fireworks 🔥</title>
 	<meta charset="utf-8">
 
 	<link rel="stylesheet" href="<%=htmlWebpackPlugin.files.chunks.main.css %>">
 </head>
+
 <body>
 	<canvas class="canvas-fireworks"></canvas>
 	<!-- controller which updates values inside ./modules/globalVariables.js -->
-	<fieldset class="controller popup popup--top-left">
-		<label for="particle-count" class="controller__label">
-			Particles:
-			<input type="range" id="particle-count" class="controller__input controller__range">
-			<output name="particle-count-output" for="particle-count">
-		</label>
+	<div class="controller popup popup--top-left">
+		<div class="controller__group">
+			<label for="particle-count" class="controller__label">
+				Particle number:
+			</label>
+			<input type="range" id="particle-count" class="controller__input" min="0" max="300">
+			<output class="controller__output" name="particle-count-output" for="particle-count">
+		</div>
+
+		<div class="controller__group">
+			<label for="particle-length" class="controller__label">
+				Particle length:
+			</label>
+			<input type="range" id="particle-length" class="controller__input" min="0" max="10">
+			<output class="controller__output" name="particle-length-output" for="particle-length">
+		</div>
+		
+		<div class="controller__group">
+			<label for="star-count" class="controller__label">
+				Star number:
+			</label>
+			<input type="range" id="star-count" class="controller__input" min="0" max="200">
+			<output class="controller__output" name="star-count-output" for="star-count">
+		</div>
 		<!-- more inputs here -->
-	</fieldset>
+	</div>
 	<article class="popup popup--bottom-right">
 		<h3 class="popup__heading">Psst... wanna make a 🎆 firework? </h3>
 		<p class="popup__paragraph">Simply click somewhere or even click and hold for more awesomeness!</p>
@@ -24,4 +44,5 @@
 
 	<script defer src="<%= htmlWebpackPlugin.files.chunks.main.entry %>"></script>
 </body>
+
 </html>

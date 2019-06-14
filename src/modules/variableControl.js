@@ -8,6 +8,7 @@ import {
 import {
     randomBetween
 } from "./utilityFunctions";
+import set from 'lodash/set'
 
 // 
 // MAIN
@@ -82,13 +83,23 @@ export const controller = {
     }
 }
 
-document.getElementById("particle-count").addEventListener('input', () => {
-    const input = document.getElementById("particle-count");
-    updateOutput(input);
-    controller.particle.count = input.value;
+document.querySelectorAll(".controller__input").forEach(input => {
+    input.addEventListener('input', () => {
+        const variablePath = input.id.replace(/-/g, ".");
+        set(controller, variablePath, parseInt(input.value));
+        updateOutput(input);
+    });
 });
 
 function updateOutput(input) {
     const output = document.querySelector(`output[for=${input.id}]`);
     output.value = input.value;
+}
+
+export function initializeInputs() {
+    document.querySelectorAll(".controller__input").forEach(input => {
+        const variablePath = input.id.replace(/-/g, ".");
+        input.value = eval(`controller.${variablePath}`);
+        updateOutput(input);
+    });
 }

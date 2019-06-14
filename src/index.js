@@ -11,7 +11,8 @@ import {
 	makeMouseGeneratedFirework
 } from './modules/fireworks';
 import {
-	controller
+	controller,
+	initializeInputs
 } from "./modules/variableControl";
 import {
 	mouse
@@ -29,6 +30,7 @@ import './style.scss';
 window.onload = () => {
 	updateCanvas();
 	createStars();
+	initializeInputs();
 	loop();
 };
 
