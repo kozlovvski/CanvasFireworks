@@ -42,7 +42,7 @@ module.exports = {
         ]
       },
       {
-        test: /\.(png|jpg|gif|svg)$/,
+        test: /\.(png|jpg|gif|svg|ico)$/,
         use: [
           {
             loader: 'file-loader',
@@ -64,6 +64,8 @@ module.exports = {
     new HtmlWebpackPlugin({
       inject: false,
       hash: true,
+      minify: true,
+      cache: false,
       template: './' + src_Path + '/index.html',
       filename: 'index.[hash].html'
     })
