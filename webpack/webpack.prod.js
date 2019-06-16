@@ -67,7 +67,7 @@ module.exports = {
       minify: true,
       cache: false,
       template: './' + src_Path + '/index.html',
-      filename: 'index.[hash].html'
+      filename: 'index.html'
     })
   ]
 };
