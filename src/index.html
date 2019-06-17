@@ -4,19 +4,20 @@
 <head>
 	<title>Fireworks</title>
 	<meta charset="utf-8">
-
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<link rel="stylesheet" href="<%=htmlWebpackPlugin.files.chunks.main.css %>">
 	<link rel="shortcut icon" href="<%=require('./images/favicon.ico')%>" type="image/x-icon">
 </head>
 
 <body>
-	<canvas class="canvas-fireworks"></canvas>
+	<p class="landscape-error landscape-error--visible">Please turn your device to landscape view</p>
+	<canvas class="canvas-fireworks" width="1920" height="1080"></canvas>
 	<div class="controller">
 		<div class="controller__group">
 			<label for="particle-count" class="controller__label">
 				Particle number:
 			</label>
-			<input type="range" id="particle-count" class="controller__input" min="0" max="300">
+			<input type="range" id="particle-count" class="controller__input" min="0" max="1000">
 			<output class="controller__output" name="particle-count-output" for="particle-count"></output>
 			<p class="controller__tooltip">Determines how many particles should be created when firework explodes.</p>
 		</div>

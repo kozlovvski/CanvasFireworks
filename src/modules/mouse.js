@@ -16,8 +16,9 @@ export const mouse = {
 };
 
 canvas.addEventListener('mousemove', e => {
-    mouse.x = e.pageX - canvas.offsetLeft;
-    mouse.y = e.pageY - canvas.offsetTop;
+    const ratio = 1080 / canvas.offsetHeight; // canvas scale ratio
+    mouse.x = e.offsetX * ratio;
+    mouse.y = e.offsetY * ratio;
 });
 
 canvas.addEventListener('mousedown', () => {

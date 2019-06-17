@@ -5,7 +5,7 @@ module.exports = {
     require('autoprefixer'),
     purgecss({
       content: ['./**/*.html'],
-      whitelistPatterns: [/(--(\w|\-)+)$/]
+      whitelistPatterns: [/.*(--(\w|-)+)$/]
     }),
     require('cssnano')({
       preset: 'default',

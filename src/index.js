@@ -27,6 +27,7 @@ import './style.scss';
 // 
 
 window.onload = () => {
+	checkForLandscapeView();
 	updateCanvas();
 	createNewStars();
 	initializeInputs();
@@ -35,8 +36,7 @@ window.onload = () => {
 
 // everytime user resizes window, make canvas fill whole document
 window.addEventListener('resize', () => {
-	updateCanvas();
-	controller.launchPosition.update();
+	checkForLandscapeView();
 });
 
 // 
@@ -80,4 +80,11 @@ function loop() {
 	if (mouse.isPressed) makeMouseGeneratedFirework();
 
 	window.requestAnimationFrame(loop);
+}
+
+function checkForLandscapeView() {
+	const errorBox = document.querySelector(".landscape-error");
+	window.innerWidth > window.innerHeight 
+	? errorBox.classList.add("landscape-error--hidden") 
+	: errorBox.classList.remove("landscape-error--hidden");
 }
