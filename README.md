@@ -2,7 +2,7 @@
 
 This project is an app rendering fireworks on HTML5 Canvas.
 
-Live demo: https://kozlovvski.github.io/MartWebsite
+Live demo: https://kozlovvski.github.io/CanvasFireworks
 
 ## Getting Started
 
