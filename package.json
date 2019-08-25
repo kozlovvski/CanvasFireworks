@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "webpack-dev-server --env dev --mode none",
     "prod": "webpack --env prod --mode production",
-    "deploy": "git subtree push --prefix dist origin gh-pages"
+    "predeploy": "npm run prod",
+    "deploy": "gh-pages -d dist"
   },
   "repository": {
     "type": "git",
@@ -40,6 +41,7 @@
     "webpack-dev-server": "^3.7.0"
   },
   "dependencies": {
+    "gh-pages": "^2.1.1",
     "normalize.css": "^8.0.1"
   }
 }
